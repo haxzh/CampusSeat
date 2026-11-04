@@ -1,0 +1,745 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  ChevronDown,
+  ChevronRight,
+  GraduationCap,
+  Menu,
+  Search,
+  X,
+} from "lucide-react";
+
+// ==========================================
+// TYPES
+// ==========================================
+
+type Course = {
+  name: string;
+  slug: string;
+};
+
+type ProgramCategory = {
+  name: string;
+  href: string;
+  courses: Course[];
+};
+
+type NavChild = {
+  name: string;
+  href: string;
+};
+
+type NavItem = {
+  name: string;
+  href: string;
+  items?: NavChild[];
+};
+
+// ==========================================
+// PROGRAM DATA
+// ==========================================
+
+const programCategories: ProgramCategory[] = [
+  {
+    name: "Doctorate Programs",
+    href: "/programs/doctorate",
+    courses: [
+    //   { name: "PhD in Computer Science", slug: "phd-computer-science" },
+    //   { name: "PhD in Artificial Intelligence", slug: "phd-artificial-intelligence" },
+      { name: "PhD in Data Science", slug: "phd-data-science" },
+      { name: "PhD in Engineering", slug: "phd-engineering" },
+      { name: "Doctor of Business Administration (DBA)", slug: "dba" },
+      { name: "Doctor of Education (EdD)", slug: "edd" },
+        { name: "Doctor of Psychology (PsyD)", slug: "psyd" },
+        { name: "Doctor of Nursing Practice (DNP)", slug: "dnp" },
+        { name: "Doctor of Public Health (DrPH)", slug: "drph" },
+    ],
+  },
+
+  {
+    name: "Bachelor's Programs",
+    href: "/programs/bachelor",
+    courses: [
+        { name: "Bachelor of Science (B.Sc)", slug: "bsc" },
+        { name: "Bachelor of Arts (BA)", slug: "ba" },
+        { name: "Bachelor of Commerce (B.Com)", slug: "bcom" },
+        { name: "Bachelor of Business Administration (BBA)", slug: "bba" },
+        { name: "Bachelor of Computer Applications (BCA)", slug: "bca" },
+        // { name: "Bachelor of Engineering (B.E)", slug: "be" },
+        // { name: "Bachelor of Technology (B.Tech)", slug: "btech" },
+        { name: "Bachelor of Fine Arts (BFA)", slug: "bfa" },
+        { name: "Bachelor of Design (B.Des)", slug: "bdes" },
+        // { name: "Bachelor of Laws (LLB)", slug: "llb" },
+    ],
+    },
+  {
+    name: "Master's Programs",
+    href: "/programs/master",
+    courses: [
+      { name: "Master of Business Administration (MBA)", slug: "mba" },
+      { name: "Master of Computer Applications (MCA)", slug: "mca" },
+    //   { name: "Master of Technology (M.Tech)", slug: "mtech" },
+      { name: "Master of Science (M.Sc)", slug: "msc" },
+      { name: "Master of Arts (MA)", slug: "ma" },
+      { name: "Master of Commerce (M.Com)", slug: "mcom" },
+      { name: "Master of Data Science", slug: "data-science" },
+      { name: "Master of Cybersecurity", slug: "cybersecurity" },
+      { name: "Master of Finance", slug: "finance" },
+    ],
+  },
+
+  {
+    name: "Skill-Based Education",
+    href: "/program/Skill-Based",
+    courses: [
+      { name: "Full Stack Development", slug: "full-stack-development" },
+      { name: "Artificial Intelligence", slug: "artificial-intelligence" },
+      { name: "Machine Learning", slug: "machine-learning" },
+      { name: "Data Analytics", slug: "data-analytics" },
+      { name: "Cybersecurity", slug: "cybersecurity" },
+      { name: "Cloud Computing", slug: "cloud-computing" },
+      { name: "Digital Marketing", slug: "digital-marketing" },
+      { name: "UI/UX Design", slug: "ui-ux-design" },
+    ],
+  },
+
+  {
+    name: "Executive Education",
+    href: "/programs/executive",
+    courses: [
+      { name: "Executive MBA", slug: "executive-mba" },
+      { name: "Executive DBA", slug: "executive-dba" },
+      { name: "Executive Leadership", slug: "executive-leadership" },
+      { name: "Strategic Management", slug: "strategic-management" },
+      { name: "Business Transformation", slug: "business-transformation" },
+      {name: "Innovation & Entrepreneurship", slug: "innovation-entrepreneurship" },
+      { name: "Global Business Strategy", slug: "global-business-strategy" },
+    ],
+  },
+
+  {
+    name: "Diploma Programs",
+    href: "/programs/diploma",
+    courses: [
+      { name: "Diploma in Computer Applications", slug: "dca" },
+      { name: "Diploma in Engineering", slug: "engineering" },
+      { name: "Diploma in Mechanical Engineering", slug: "mechanical-engineering" },
+      { name: "Diploma in Civil Engineering", slug: "civil-engineering" },
+      { name: "Diploma in Hotel Management", slug: "hotel-management" },
+      { name: "Diploma in Nursing", slug: "nursing" },
+    ],
+  },
+
+  {
+    name: "Short-Term Courses",
+    href: "/Programs/Short-Term-Courses",
+    courses: [
+      { name: "IELTS Preparation", slug: "ielts" },
+      { name: "English Language", slug: "english-language" },
+      { name: "German Language", slug: "german-language" },
+      { name: "French Language", slug: "french-language" },
+      { name: "Professional Certification", slug: "professional-certification" },
+    ],
+  },
+];
+
+// ==========================================
+// NAVIGATION
+// ==========================================
+
+const navigation: NavItem[] = [
+  {
+    name: "Programs",
+    href: "/programs",
+    items: [
+      { name: "Explore Programs", href: "/programs" },
+      ...programCategories.map((program) => ({
+        name: program.name,
+        href: program.href,
+      })),
+    ],
+  },
+
+  {
+    name: "Destinations",
+    href: "/countries",
+    items: [
+      { name: "All Destinations", href: "/countries" },
+      { name: "United States", href: "/countries/united-states" },
+      { name: "United Kingdom", href: "/countries/united-kingdom" },
+      { name: "Germany", href: "/countries/germany" },
+      // { name: "Canada", href: "/countries/canada" },
+      // { name: "Australia", href: "/countries/australia" },
+      { name: "France", href: "/countries/france" },
+      { name: "Switzerland", href: "/countries/switzerland" },
+      { name: "India", href: "/countries/india" },
+    ],
+  },
+
+  { name: "Online Universities", href: "/online-universities" },
+  { name: "Admissions", href: "/admissions" },
+  { name: "Compare", href: "/compare" },
+  { name: "About Us", href: "/about" },
+  { name: "Career Guidance", href: "/career-guidance" },
+  { name: "Scholarships", href: "/scholarships" },
+  // { name: "Counselling", href: "/counselling" },
+  { name: "Blog", href: "/blog" },
+];
+
+const focusRing =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171717]";
+
+// ==========================================
+// NAVBAR COMPONENT
+// ==========================================
+
+type NavbarProps = {
+  brandName?: string;
+  brandTagline?: string;
+};
+
+export default function Navbar({
+  brandName = "CampusSeat",
+  brandTagline = "Find your way forward",
+}: NavbarProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const [activeProgram, setActiveProgram] = useState<ProgramCategory>(
+    programCategories[1]
+  );
+
+  const [activeMobileProgram, setActiveMobileProgram] = useState<string | null>(
+    "Bachelor's Programs"
+  );
+
+  const [countries, setCountries] = useState<
+    Array<{ name: string; slug: string; isActive?: boolean }>
+  >([]);
+
+  // ==========================================
+  // FETCH COUNTRIES
+  // ==========================================
+
+  useEffect(() => {
+    const apiUrl =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+    fetch(`${apiUrl}/countries`)
+      .then((response) => (response.ok ? response.json() : []))
+      .then(
+        (items: Array<{
+          name: string;
+          slug: string;
+          isActive?: boolean;
+        }>) => {
+          setCountries(
+            items.filter((item) => item.isActive !== false)
+          );
+        }
+      )
+      .catch((error) => {
+        console.error("Failed to load countries:", error);
+      });
+  }, []);
+
+  // ==========================================
+  // DYNAMIC NAVIGATION
+  // ==========================================
+
+  const liveNavigation: NavItem[] = navigation.map((item) => {
+    if (item.name !== "Destinations") return item;
+
+    const destinations = new Map(
+      (item.items || []).map((option) => [
+        option.name.trim().toLocaleLowerCase(),
+        option,
+      ])
+    );
+
+    countries.forEach((country) => {
+      const key = country.name.trim().toLocaleLowerCase();
+      if (!destinations.has(key)) {
+        destinations.set(key, {
+          name: country.name,
+          href: `/countries/${country.slug}`,
+        });
+      }
+    });
+
+    return { ...item, items: Array.from(destinations.values()) };
+  });
+
+  // ==========================================
+  // CLOSE MENU
+  // ==========================================
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setActiveDropdown(null);
+  };
+
+  // ==========================================
+  // GET ACTIVE PROGRAM
+  // ==========================================
+
+  const selectProgram = (name: string) => {
+    const selected = programCategories.find(
+      (program) => program.name === name
+    );
+
+    if (selected) {
+      setActiveProgram(selected);
+    }
+  };
+
+  // ==========================================
+  // JSX
+  // ==========================================
+
+  return (
+    <header className="fixed inset-x-0 top-0 z-50 bg-transparent px-3 py-3 sm:px-5 lg:px-8">
+
+      <nav
+        aria-label="Main navigation"
+        className="mx-auto flex min-h-[76px] max-w-[1440px] items-center rounded-[22px] border border-white/70 bg-white/80 px-4 shadow-[0_12px_38px_rgba(0,0,0,0.10)] backdrop-blur-xl sm:px-6 lg:px-8"
+      >
+
+        {/* ==================================
+            LOGO
+        ================================== */}
+
+        <Link
+          href="/"
+          onClick={closeMenu}
+          className={`group flex shrink-0 items-center gap-3 rounded-xl ${focusRing}`}
+        >
+          <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#171717] text-white transition-transform group-hover:-rotate-3">
+            <GraduationCap size={22} strokeWidth={1.8} />
+          </span>
+
+          <span>
+            <span className="block text-[21px] font-bold leading-none tracking-[-0.055em] text-[#171717] sm:text-[23px]">
+              {brandName}<span className="text-[#77776f]">.</span>
+            </span>
+
+            <span className="mt-1 block text-[8px] font-bold uppercase tracking-[0.22em] text-[#77776f]">
+              {brandTagline}
+            </span>
+          </span>
+        </Link>
+
+        {/* ==================================
+            DESKTOP NAVIGATION
+        ================================== */}
+
+        <div className="hidden min-w-0 flex-1 items-center justify-center gap-[2px] lg:flex xl:gap-1">
+
+          {liveNavigation.map((item) => (
+
+            <div
+              key={item.name}
+              className="group relative"
+            >
+
+              {/* NAVIGATION LINK */}
+
+              <Link
+                href={item.href}
+                className={`inline-flex items-center gap-1 rounded-full px-[8px] py-3 text-[11px] font-semibold text-[#343434] transition hover:bg-[#f1f1ed] hover:text-black xl:px-[10px] xl:text-[12px] 2xl:px-3 ${focusRing}`}
+              >
+                {item.name}
+
+                {item.items && (
+                  <ChevronDown
+                    size={13}
+                    className="transition-transform group-hover:rotate-180"
+                  />
+                )}
+              </Link>
+
+              {/* ==================================
+                  PROGRAMS MEGA MENU
+              ================================== */}
+
+              {item.name === "Programs" && (
+
+                <div
+                  className="invisible absolute left-0 top-full z-50 w-[690px] translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100"
+                >
+
+                  <div className="flex overflow-hidden rounded-2xl border border-[#deded8] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
+
+                    {/* LEFT CATEGORY PANEL */}
+
+                    <div className="w-[280px] shrink-0 border-r border-[#ecece7] p-3">
+
+                      <Link
+                        href="/programs"
+                        className={`mb-2 flex items-center justify-between rounded-xl px-3.5 py-3 text-sm font-semibold text-[#343434] transition hover:bg-[#f1f1ed] ${focusRing}`}
+                      >
+                        Explore Programs
+                        <ArrowRight size={15} />
+                      </Link>
+
+                      {/* <div className="mb-2 px-3.5 pt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#999990]">
+                        Study Categories
+                      </div> */}
+
+                      {programCategories.map((program) => (
+
+                        <Link
+                          key={program.name}
+                          href={program.href}
+                          onMouseEnter={() => setActiveProgram(program)}
+                          onFocus={() => setActiveProgram(program)}
+                          className={`flex items-center justify-between rounded-xl px-3.5 py-3 text-[13px] font-medium transition ${
+                            activeProgram.name === program.name
+                              ? "bg-[#f1f1ed] text-[#171717]"
+                              : "text-[#55554f] hover:bg-[#f7f7f4]"
+                          } ${focusRing}`}
+                        >
+                          {program.name}
+
+                          <ChevronRight
+                            size={16}
+                            className={
+                              activeProgram.name === program.name
+                                ? "text-[#171717]"
+                                : "text-[#999990]"
+                            }
+                          />
+
+                        </Link>
+
+                      ))}
+
+                    </div>
+
+                    {/* RIGHT COURSES PANEL */}
+
+                    <div className="min-w-0 flex-1 p-5">
+
+                      <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#999990]">
+                        Explore Courses
+                      </div>
+
+                      <h3 className="mb-1 text-lg font-bold tracking-tight text-[#171717]">
+                        {activeProgram.name}
+                      </h3>
+
+                      <p className="mb-4 text-xs text-[#888880]">
+                        Find the right course for your future.
+                      </p>
+
+                      <div className="max-h-[340px] space-y-1 overflow-y-auto pr-1">
+
+                        {activeProgram.courses.map((course) => (
+
+                          <Link
+                            key={course.slug}
+                            href={`${activeProgram.href}/${course.slug}`}
+                            className={`group/course flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-[12px] font-medium text-[#55554f] transition hover:bg-[#f1f1ed] hover:text-[#171717] ${focusRing}`}
+                          >
+                            <span>{course.name}</span>
+
+                            <ArrowRight
+                              size={14}
+                              className="shrink-0 text-[#aaa9a0] transition-transform group-hover/course:translate-x-1 group-hover/course:text-[#171717]"
+                            />
+
+                          </Link>
+
+                        ))}
+
+                      </div>
+
+                      <div className="mt-4 border-t border-[#ecece7] pt-3">
+
+                        <Link
+                          href={activeProgram.href}
+                          className="inline-flex items-center gap-2 text-xs font-bold text-[#171717] hover:underline"
+                        >
+                          View all {activeProgram.name}
+                          <ArrowRight size={14} />
+                        </Link>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              )}
+
+              {/* ==================================
+                  DESTINATIONS DROPDOWN
+              ================================== */}
+
+              {item.items && item.name !== "Programs" && (
+
+                <div className="invisible absolute left-0 top-full z-50 w-64 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+
+                  <div className="max-h-[420px] overflow-y-auto rounded-2xl border border-[#deded8] bg-white p-2 shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
+
+                    {item.items.map((option) => (
+
+                      <Link
+                        key={option.name}
+                        href={option.href}
+                        className={`flex items-center justify-between rounded-xl px-3.5 py-3 text-sm font-medium text-[#3f3f3b] transition hover:bg-[#f1f1ed] ${focusRing}`}
+                      >
+                        {option.name}
+                        <ArrowRight size={14} className="text-[#77776f]" />
+                      </Link>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+              )}
+
+            </div>
+
+          ))}
+
+        </div>
+
+        {/* ==================================
+            DESKTOP ACTION BUTTONS
+        ================================== */}
+
+        <div className="hidden shrink-0 items-center gap-2 lg:flex">
+
+          <Link
+            href="/programs"
+            aria-label="Search Programs"
+            className="grid h-11 w-11 place-items-center rounded-full border border-[#deded8] transition hover:bg-[#f1f1ed]"
+          >
+            <Search size={18} />
+          </Link>
+
+          <Link
+            href="/contact"
+            className={`group inline-flex items-center gap-1.5 rounded-full bg-[#171717] px-4 py-3 text-xs font-bold text-white transition hover:-translate-y-0.5 xl:px-5 xl:text-sm ${focusRing}`}
+          >
+            Get counselling
+            <ArrowRight size={15} />
+          </Link>
+
+        </div>
+
+        {/* ==================================
+            MOBILE MENU BUTTON
+        ================================== */}
+
+        <button
+          type="button"
+          aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+          className={`ml-auto flex h-11 w-11 items-center justify-center rounded-xl border border-[#deded8] bg-white text-[#171717] lg:hidden ${focusRing}`}
+        >
+          {menuOpen ? <X size={21} /> : <Menu size={21} />}
+        </button>
+
+      </nav>
+
+      {/* ==================================
+          MOBILE NAVIGATION
+      ================================== */}
+
+      {menuOpen && (
+
+        <div className="mx-auto mt-2 max-h-[calc(100vh-110px)] max-w-[1440px] overflow-y-auto rounded-[22px] border border-[#deded8] bg-white p-3 shadow-[0_24px_60px_rgba(0,0,0,0.16)] lg:hidden">
+
+          {liveNavigation.map((item) => (
+
+            <div
+              key={item.name}
+              className="border-b border-[#ecece7] last:border-0"
+            >
+
+              {/* MOBILE MAIN LINK */}
+
+              <div className="flex items-center">
+
+                <Link
+                  href={item.href}
+                  onClick={closeMenu}
+                  className={`flex-1 rounded-xl px-3 py-3.5 text-sm font-semibold text-[#343434] hover:bg-[#f1f1ed] ${focusRing}`}
+                >
+                  {item.name}
+                </Link>
+
+                {item.items && (
+
+                  <button
+                    type="button"
+                    aria-label={`Toggle ${item.name} submenu`}
+                    aria-expanded={activeDropdown === item.name}
+                    onClick={() =>
+                      setActiveDropdown((current) =>
+                        current === item.name ? null : item.name
+                      )
+                    }
+                    className={`rounded-xl p-3 text-[#343434] hover:bg-[#f1f1ed] ${focusRing}`}
+                  >
+                    <ChevronDown
+                      size={18}
+                      className={`transition-transform ${
+                        activeDropdown === item.name ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                )}
+
+              </div>
+
+              {/* ==================================
+                  MOBILE PROGRAM CATEGORIES
+              ================================== */}
+
+              {item.name === "Programs" &&
+                activeDropdown === "Programs" && (
+
+                  <div className="mb-3 ml-3 border-l border-[#d6d6cf] pl-3">
+
+                    <Link
+                      href="/programs"
+                      onClick={closeMenu}
+                      className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-[#171717] hover:bg-[#f1f1ed]"
+                    >
+                      Explore All Programs
+                    </Link>
+
+                    {programCategories.map((program) => (
+
+                      <div key={program.name}>
+
+                        {/* CATEGORY */}
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setActiveMobileProgram((current) =>
+                              current === program.name
+                                ? null
+                                : program.name
+                            )
+                          }
+                          className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-left text-sm font-medium text-[#55554f] hover:bg-[#f1f1ed]"
+                        >
+                          {program.name}
+
+                          <ChevronDown
+                            size={15}
+                            className={`transition-transform ${
+                              activeMobileProgram === program.name
+                                ? "rotate-180"
+                                : ""
+                            }`}
+                          />
+
+                        </button>
+
+                        {/* COURSES */}
+
+                        {activeMobileProgram === program.name && (
+
+                          <div className="mb-2 ml-3 border-l border-[#deded8] pl-3">
+
+                            {program.courses.map((course) => (
+
+                              <Link
+                                key={course.slug}
+                                href={`${program.href}/${course.slug}`}
+                                onClick={closeMenu}
+                                className="block rounded-lg px-3 py-2.5 text-xs text-[#77776f] transition hover:bg-[#f1f1ed] hover:text-[#171717]"
+                              >
+                                {course.name}
+                              </Link>
+
+                            ))}
+
+                            <Link
+                              href={program.href}
+                              onClick={closeMenu}
+                              className="block px-3 py-2 text-xs font-bold text-[#171717] hover:underline"
+                            >
+                              View All Programs →
+                            </Link>
+
+                          </div>
+
+                        )}
+
+                      </div>
+
+                    ))}
+
+                  </div>
+
+                )}
+
+              {/* ==================================
+                  MOBILE DESTINATIONS
+              ================================== */}
+
+              {item.items &&
+                item.name !== "Programs" &&
+                activeDropdown === item.name && (
+
+                  <div className="mb-3 ml-4 border-l border-[#d6d6cf] pl-3">
+
+                    {item.items.map((option) => (
+
+                      <Link
+                        key={option.name}
+                        href={option.href}
+                        onClick={closeMenu}
+                        className={`block rounded-lg px-3 py-2.5 text-sm text-[#686860] hover:bg-[#f1f1ed] ${focusRing}`}
+                      >
+                        {option.name}
+                      </Link>
+
+                    ))}
+
+                  </div>
+
+                )}
+
+            </div>
+
+          ))}
+
+          {/* MOBILE COUNSELLING BUTTON */}
+
+          <div className="mt-4 pb-1">
+
+            <Link
+              href="/contact"
+              onClick={closeMenu}
+              className={`inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#171717] px-3 py-3 text-sm font-bold text-white ${focusRing}`}
+            >
+              Get counselling
+              <ArrowRight size={15} />
+            </Link>
+
+          </div>
+
+        </div>
+
+      )}
+
+    </header>
+  );
+}
