@@ -788,49 +788,739 @@
 
 
 
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import Link from "next/link";
+// import {
+//   ArrowRight,
+//   ChevronDown,
+//   GraduationCap,
+//   Menu,
+//   Search,
+//   X,
+// } from "lucide-react";
+
+// // ==========================================
+// // TYPES
+// // ==========================================
+
+// type NavChild = {
+//   name: string;
+//   href: string;
+// };
+
+// type NavItem = {
+//   name: string;
+//   href: string;
+//   items?: NavChild[];
+// };
+
+// type Program = {
+//   name: string;
+//   href: string;
+// };
+
+// // ==========================================
+// // MAIN PROGRAMS
+// // Only 5 main folders
+// // ==========================================
+
+// const programs: Program[] = [
+//   {
+//     name: "Bachelor's Programs",
+//     href: "/programs/bachelor",
+//   },
+//   {
+//     name: "Doctorate Programs",
+//     href: "/programs/doctorate",
+//   },
+//   {
+//     name: "Master's Programs",
+//     href: "/programs/master",
+//   },
+//   {
+//     name: "Professional Programs",
+//     href: "/programs/professional",
+//   },
+//   {
+//     name: "Short-Term Courses",
+//     href: "/programs/short-term",
+//   },
+// ];
+
+// // ==========================================
+// // NAVIGATION
+// // ==========================================
+
+// const navigation: NavItem[] = [
+//   {
+//     name: "Programs",
+//     href: "/programs",
+//   },
+//   {
+//     name: "Destinations",
+//     href: "/countries",
+//     items: [
+//       { name: "All Destinations", href: "/countries" },
+//       {
+//         name: "United States",
+//         href: "/countries/united-states",
+//       },
+//       {
+//         name: "United Kingdom",
+//         href: "/countries/united-kingdom",
+//       },
+//       {
+//         name: "Germany",
+//         href: "/countries/germany",
+//       },
+//       {
+//         name: "France",
+//         href: "/countries/france",
+//       },
+//       {
+//         name: "Switzerland",
+//         href: "/countries/switzerland",
+//       },
+//       {
+//         name: "India",
+//         href: "/countries/india",
+//       },
+//     ],
+//   },
+
+//   // {
+//   //   name: "Online Universities",
+//   //   href: "/online-universities",
+//   // },
+//   {
+//     name: "Doctorate Programs",
+//     href: "/programs/doctorate",
+//   },
+//   // {
+//   //   name: "Admissions",
+//   //   href: "/admissions",
+//   // },
+//   {
+//     name: "Master's Programs",
+//     href: "/programs/master",
+//   },
+
+//   {
+//     name: "Bachelor's Programs",
+//     href: "/programs/bachelor",
+//   },
+//   // {
+//   //   name: "Compare",
+//   //   href: "/compare",
+//   // },
+//   {
+//     name: "Professional Programs",
+//     href: "/programs/professional",
+//   },
+//   {
+//     name: "Short-Term Courses",
+//     href: "/programs/short-term",
+//   },
+//   {
+//     name: "About Us",
+//     href: "/about-us",
+//   },
+//   {
+//     name: "Career Guidance",
+//     href: "/career-guidance",
+//   },
+//   {
+//     name: "Scholarships",
+//     href: "/scholarships",
+//   },
+//   {
+//     name: "Blog",
+//     href: "/blog",
+//   },
+// ];
+
+// // ==========================================
+// // NAVBAR COMPONENT
+// // ==========================================
+
+// type NavbarProps = {
+//   brandName?: string;
+//   brandTagline?: string;
+//   flush?: boolean;
+//   appearance?: "light" | "dark";
+// };
+
+// export default function Navbar({
+//   brandName = "CampusSeat",
+//   brandTagline = "Find your way forward",
+//   flush = false,
+//   appearance = "dark",
+// }: NavbarProps) {
+//   const [menuOpen, setMenuOpen] = useState(false);
+//   const [isScrolled, setIsScrolled] = useState(false);
+
+//   const [activeDropdown, setActiveDropdown] =
+//     useState<string | null>(null);
+
+//   const [countries, setCountries] = useState<
+//     Array<{
+//       name: string;
+//       slug: string;
+//       isActive?: boolean;
+//     }>
+//   >([]);
+
+//   const focusRing = `focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${appearance === "dark"
+//       ? "focus-visible:outline-white"
+//       : "focus-visible:outline-[#171717]"
+//     }`;
+
+//   // ==========================================
+//   // SCROLL EFFECT
+//   // ==========================================
+
+//   useEffect(() => {
+//     if (!flush) return;
+
+//     const updateScrolledState = () => {
+//       setIsScrolled(window.scrollY > 48);
+//     };
+
+//     updateScrolledState();
+
+//     window.addEventListener("scroll", updateScrolledState, {
+//       passive: true,
+//     });
+
+//     return () => {
+//       window.removeEventListener("scroll", updateScrolledState);
+//     };
+//   }, [flush]);
+
+//   // ==========================================
+//   // FETCH COUNTRIES
+//   // ==========================================
+
+//   useEffect(() => {
+//     const apiUrl =
+//       process.env.NEXT_PUBLIC_API_URL ||
+//       "http://localhost:5000/api";
+
+//     const controller = new AbortController();
+
+//     fetch(`${apiUrl}/countries`, {
+//       signal: controller.signal,
+//     })
+//       .then((response) => {
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch countries");
+//         }
+
+//         return response.json();
+//       })
+//       .then(
+//         (
+//           items: Array<{
+//             name: string;
+//             slug: string;
+//             isActive?: boolean;
+//           }>
+//         ) => {
+//           if (Array.isArray(items)) {
+//             setCountries(
+//               items.filter(
+//                 (item) => item.isActive !== false
+//               )
+//             );
+//           }
+//         }
+//       )
+//       .catch((error) => {
+//         if (error.name !== "AbortError") {
+//           console.error(
+//             "Failed to load countries:",
+//             error
+//           );
+//         }
+//       });
+
+//     return () => controller.abort();
+//   }, []);
+
+//   // ==========================================
+//   // DYNAMIC DESTINATIONS
+//   // ==========================================
+
+//   const liveNavigation: NavItem[] = navigation.map(
+//     (item) => {
+//       if (item.name !== "Destinations") {
+//         return item;
+//       }
+
+//       const destinations = new Map(
+//         (item.items || []).map((option) => [
+//           option.name.trim().toLowerCase(),
+//           option,
+//         ])
+//       );
+
+//       countries.forEach((country) => {
+//         const key = country.name.trim().toLowerCase();
+
+//         if (!destinations.has(key)) {
+//           destinations.set(key, {
+//             name: country.name,
+//             href: `/countries/${country.slug}`,
+//           });
+//         }
+//       });
+
+//       return {
+//         ...item,
+//         items: Array.from(destinations.values()),
+//       };
+//     }
+//   );
+
+//   // ==========================================
+//   // CLOSE MENU
+//   // ==========================================
+
+//   const closeMenu = () => {
+//     setMenuOpen(false);
+//     setActiveDropdown(null);
+//   };
+
+//   // ==========================================
+//   // TOGGLE MOBILE DROPDOWN
+//   // ==========================================
+
+//   const toggleDropdown = (name: string) => {
+//     setActiveDropdown((current) =>
+//       current === name ? null : name
+//     );
+//   };
+
+//   // ==========================================
+//   // JSX
+//   // ==========================================
+
+//   return (
+//     <header
+//       className={
+//         flush || appearance === "dark"
+//           ? "fixed inset-x-0 top-0 z-50 w-full"
+//           : "fixed inset-x-0 top-0 z-50 px-2 py-2 sm:px-4 lg:px-1"
+//       }
+//     >
+//       <nav
+//         aria-label="Main navigation"
+//         className={`mx-auto flex w-full items-center border border-[#eceae4] px-4 sm:px-6 lg:px-8 ${appearance === "dark" && !flush
+//             ? "min-h-[96px]"
+//             : "min-h-[76px]"
+//           } ${flush
+//             ? `max-w-none rounded-none border-x-0 border-t-0 transition-colors duration-300 ${isScrolled
+//               ? "border-white/10 bg-black shadow-[0_12px_38px_rgba(0,0,0,0.25)]"
+//               : "border-transparent bg-transparent shadow-none"
+//             }`
+//             : appearance === "dark"
+//               ? "max-w-none rounded-none border-0 bg-black shadow-none"
+//               : "max-w-[1520px] rounded-[24px] bg-[#f5f3ef]/90 shadow-[0_16px_42px_rgba(0,0,0,0.10)] backdrop-blur-2xl"
+//           }`}
+//       >
+
+//         {/* ==================================
+//             LOGO
+//         ================================== */}
+
+//         <Link
+//           href="/"
+//           onClick={closeMenu}
+//           className={`group flex shrink-0 items-center gap-3 rounded-xl ${focusRing}`}
+//         >
+//           <span
+//             className={`flex h-10 w-10 items-center justify-center rounded-[13px] transition-transform group-hover:-rotate-3 ${flush || appearance === "dark"
+//                 ? "bg-white text-black"
+//                 : "bg-[#171717] text-white"
+//               }`}
+//           >
+//             <GraduationCap
+//               size={22}
+//               strokeWidth={1.8}
+//             />
+//           </span>
+
+//           <span>
+//             <span
+//               className={`block text-[21px] font-bold leading-none tracking-[-0.055em] sm:text-[23px] ${flush || appearance === "dark"
+//                   ? "text-white"
+//                   : "text-[#171717]"
+//                 }`}
+//             >
+//               {brandName}
+//               <span
+//                 className={
+//                   flush || appearance === "dark"
+//                     ? "text-white/60"
+//                     : "text-[#77776f]"
+//                 }
+//               >
+//                 .
+//               </span>
+//             </span>
+
+//             <span
+//               className={`mt-1 block text-[8px] font-bold uppercase tracking-[0.22em] ${flush || appearance === "dark"
+//                   ? "text-white/65"
+//                   : "text-[#77776f]"
+//                 }`}
+//             >
+//               {brandTagline}
+//             </span>
+//           </span>
+//         </Link>
+
+//         {/* ==================================
+//             DESKTOP NAVIGATION
+//         ================================== */}
+
+//         <div className="hidden min-w-0 flex-1 items-center justify-center gap-[2px] lg:flex xl:gap-1">
+
+//           {liveNavigation.map((item) => (
+//             <div
+//               key={item.name}
+//               className="group relative"
+//             >
+
+//               {/* MAIN NAVIGATION LINK */}
+
+//               <Link
+//                 href={item.href}
+//                 className={`inline-flex items-center gap-1 rounded-full px-[8px] py-3 text-[11px] font-semibold transition xl:px-[10px] xl:text-[12px] 2xl:px-3 ${flush
+//                     ? "text-white hover:bg-white/10 hover:text-[#d6b46c]"
+//                     : appearance === "dark"
+//                       ? "text-white hover:bg-white/10"
+//                       : "text-[#343434] hover:bg-[#f1f1ed] hover:text-black"
+//                   } ${focusRing}`}
+//               >
+//                 {item.name}
+
+//                 {(item.name === "Programs" ||
+//                   item.items) && (
+//                     <ChevronDown
+//                       size={13}
+//                       className="transition-transform group-hover:rotate-180"
+//                     />
+//                   )}
+//               </Link>
+
+//               {/* ==================================
+//                   PROGRAMS DROPDOWN
+//                   ONLY 5 MAIN PROGRAMS
+//                   NO ARROWS
+//                   NO VIEW ALL BUTTON
+//               ================================== */}
+
+//               {item.name === "Programs" && (
+//                 <div className="invisible absolute left-0 top-full z-50 w-[400px] translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+
+//                   <div className="overflow-hidden rounded-[22px] border border-[#deded8] bg-white p-3 shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
+
+//                     {/* DROPDOWN HEADER */}
+
+//                     <div className="border-b border-[#ecece7] px-4 py-4">
+//                       <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#999990]">
+//                         Explore Programs
+//                       </p>
+
+//                       <h3 className="mt-1 text-xl font-bold text-[#171717]">
+//                         Find Your Program
+//                       </h3>
+
+//                       <p className="mt-1 text-xs text-[#888880]">
+//                         Find the right course for your future.
+//                       </p>
+//                     </div>
+
+//                     {/* PROGRAM LINKS */}
+
+//                     <div className="py-2">
+
+//                       {programs.map((program) => (
+//                         <Link
+//                           key={program.href}
+//                           href={program.href}
+//                           className={`block rounded-xl px-4 py-4 text-[14px] font-semibold text-[#454540] transition hover:bg-[#f5f3ef] hover:text-[#171717] ${focusRing}`}
+//                         >
+//                           {program.name}
+//                         </Link>
+//                       ))}
+
+//                     </div>
+
+//                   </div>
+//                 </div>
+//               )}
+
+//               {/* ==================================
+//                   DESTINATIONS DROPDOWN
+//               ================================== */}
+
+//               {item.name === "Destinations" &&
+//                 item.items && (
+//                   <div className="invisible absolute left-0 top-full z-50 w-64 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+
+//                     <div className="max-h-[420px] overflow-y-auto rounded-2xl border border-[#deded8] bg-white p-2 shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
+
+//                       {item.items.map((option) => (
+//                         <Link
+//                           key={option.name}
+//                           href={option.href}
+//                           className={`flex items-center justify-between rounded-xl px-3.5 py-3 text-sm font-medium text-[#3f3f3b] transition hover:bg-[#f1f1ed] ${focusRing}`}
+//                         >
+//                           {option.name}
+
+//                           <ArrowRight
+//                             size={14}
+//                             className="text-[#77776f]"
+//                           />
+//                         </Link>
+//                       ))}
+
+//                     </div>
+//                   </div>
+//                 )}
+
+//             </div>
+//           ))}
+
+//         </div>
+
+//         {/* ==================================
+//             DESKTOP ACTION BUTTONS
+//         ================================== */}
+
+//         <div className="hidden shrink-0 items-center gap-2 lg:flex">
+
+//           <Link
+//             href="/programs"
+//             aria-label="Search Programs"
+//             className={`grid h-11 w-11 place-items-center rounded-full border transition ${flush
+//                 ? "border-white/30 text-white hover:bg-white/10"
+//                 : appearance === "dark"
+//                   ? "border-white/30 text-white hover:bg-white/10"
+//                   : "border-[#deded8] hover:bg-[#f1f1ed]"
+//               }`}
+//           >
+//             <Search size={18} />
+//           </Link>
+
+//           <Link
+//             href="/contact"
+//             className={`group inline-flex items-center gap-1.5 rounded-full px-4 py-3 text-xs font-bold transition hover:-translate-y-0.5 xl:px-5 xl:text-sm ${flush || appearance === "dark"
+//                 ? "bg-white text-black hover:bg-[#e8e8e5]"
+//                 : "bg-[#171717] text-white"
+//               } ${focusRing}`}
+//           >
+//             Get counselling
+//             <ArrowRight size={15} />
+//           </Link>
+
+//         </div>
+
+//         {/* ==================================
+//             MOBILE MENU BUTTON
+//         ================================== */}
+
+//         <button
+//           type="button"
+//           aria-label={
+//             menuOpen
+//               ? "Close navigation"
+//               : "Open navigation"
+//           }
+//           aria-expanded={menuOpen}
+//           onClick={() =>
+//             setMenuOpen((open) => !open)
+//           }
+//           className={`ml-auto flex h-11 w-11 items-center justify-center rounded-xl border lg:hidden ${flush || appearance === "dark"
+//               ? "border-white/30 bg-black/20 text-white"
+//               : "border-[#deded8] bg-white text-[#171717]"
+//             } ${focusRing}`}
+//         >
+//           {menuOpen ? (
+//             <X size={21} />
+//           ) : (
+//             <Menu size={21} />
+//           )}
+//         </button>
+
+//       </nav>
+
+//       {/* ==================================
+//           MOBILE NAVIGATION
+//       ================================== */}
+
+//       {menuOpen && (
+//         <div
+//           className={`mx-auto max-h-[calc(100vh-76px)] w-full overflow-y-auto border border-[#deded8] bg-white p-3 shadow-[0_24px_60px_rgba(0,0,0,0.16)] lg:hidden ${flush
+//               ? "rounded-none border-x-0"
+//               : "mt-2 max-w-[1440px] rounded-[22px]"
+//             }`}
+//         >
+
+//           {liveNavigation.map((item) => (
+//             <div
+//               key={item.name}
+//               className="border-b border-[#ecece7] last:border-0"
+//             >
+
+//               {/* MOBILE MAIN LINK */}
+
+//               <div className="flex items-center">
+
+//                 <Link
+//                   href={item.href}
+//                   onClick={closeMenu}
+//                   className={`flex-1 rounded-xl px-3 py-3.5 text-sm font-semibold text-[#343434] hover:bg-[#f1f1ed] ${focusRing}`}
+//                 >
+//                   {item.name}
+//                 </Link>
+
+//                 {/* DROPDOWN TOGGLE */}
+
+//                 {(item.name === "Programs" ||
+//                   item.name === "Destinations") && (
+//                     <button
+//                       type="button"
+//                       aria-label={`Toggle ${item.name} submenu`}
+//                       aria-expanded={
+//                         activeDropdown === item.name
+//                       }
+//                       onClick={() =>
+//                         toggleDropdown(item.name)
+//                       }
+//                       className={`rounded-xl p-3 text-[#343434] hover:bg-[#f1f1ed] ${focusRing}`}
+//                     >
+//                       <ChevronDown
+//                         size={18}
+//                         className={`transition-transform ${activeDropdown === item.name
+//                             ? "rotate-180"
+//                             : ""
+//                           }`}
+//                       />
+//                     </button>
+//                   )}
+
+//               </div>
+
+//               {/* ==================================
+//                   MOBILE PROGRAMS
+//                   ONLY 5 MAIN PROGRAMS
+//                   NO ARROWS
+//                   NO VIEW ALL
+//               ================================== */}
+
+//               {item.name === "Programs" &&
+//                 activeDropdown === "Programs" && (
+//                   <div className="mb-3 ml-3 border-l border-[#d6d6cf] pl-3">
+
+//                     {programs.map((program) => (
+//                       <Link
+//                         key={program.href}
+//                         href={program.href}
+//                         onClick={closeMenu}
+//                         className="block rounded-lg px-3 py-3.5 text-sm font-medium text-[#686860] transition hover:bg-[#f1f1ed] hover:text-[#171717]"
+//                       >
+//                         {program.name}
+//                       </Link>
+//                     ))}
+
+//                   </div>
+//                 )}
+
+//               {/* ==================================
+//                   MOBILE DESTINATIONS
+//               ================================== */}
+
+//               {item.name === "Destinations" &&
+//                 item.items &&
+//                 activeDropdown === "Destinations" && (
+//                   <div className="mb-3 ml-3 border-l border-[#d6d6cf] pl-3">
+
+//                     {item.items.map((option) => (
+//                       <Link
+//                         key={option.name}
+//                         href={option.href}
+//                         onClick={closeMenu}
+//                         className={`block rounded-lg px-3 py-2.5 text-sm text-[#686860] transition hover:bg-[#f1f1ed] ${focusRing}`}
+//                       >
+//                         {option.name}
+//                       </Link>
+//                     ))}
+
+//                   </div>
+//                 )}
+
+//             </div>
+//           ))}
+
+//           {/* MOBILE COUNSELLING BUTTON */}
+
+//           <div className="mt-4 pb-1">
+//             <Link
+//               href="/contact"
+//               onClick={closeMenu}
+//               className={`inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#171717] px-3 py-3 text-sm font-bold text-white ${focusRing}`}
+//             >
+//               Get counselling
+//               <ArrowRight size={15} />
+//             </Link>
+//           </div>
+
+//         </div>
+//       )}
+
+//     </header>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  ChevronDown,
-  GraduationCap,
-  Menu,
-  Search,
-  X,
-} from "lucide-react";
+import { GraduationCap, Menu, X } from "lucide-react";
 
 // ==========================================
 // TYPES
 // ==========================================
 
-type NavChild = {
-  name: string;
-  href: string;
-};
-
 type NavItem = {
   name: string;
   href: string;
-  items?: NavChild[];
-};
-
-type Program = {
-  name: string;
-  href: string;
 };
 
 // ==========================================
-// MAIN PROGRAMS
-// Only 5 main folders
+// NAVIGATION
 // ==========================================
 
-const programs: Program[] = [
-  {
-    name: "Bachelor's Programs",
-    href: "/programs/bachelor",
-  },
+const navigation: NavItem[] = [
   {
     name: "Doctorate Programs",
     href: "/programs/doctorate",
@@ -840,6 +1530,10 @@ const programs: Program[] = [
     href: "/programs/master",
   },
   {
+    name: "Bachelor's Programs",
+    href: "/programs/bachelor",
+  },
+  {
     name: "Professional Programs",
     href: "/programs/professional",
   },
@@ -847,72 +1541,14 @@ const programs: Program[] = [
     name: "Short-Term Courses",
     href: "/programs/short-term",
   },
-];
-
-// ==========================================
-// NAVIGATION
-// ==========================================
-
-const navigation: NavItem[] = [
-  {
-    name: "Programs",
-    href: "/programs",
-  },
-  {
-    name: "Destinations",
-    href: "/countries",
-    items: [
-      { name: "All Destinations", href: "/countries" },
-      {
-        name: "United States",
-        href: "/countries/united-states",
-      },
-      {
-        name: "United Kingdom",
-        href: "/countries/united-kingdom",
-      },
-      {
-        name: "Germany",
-        href: "/countries/germany",
-      },
-      {
-        name: "France",
-        href: "/countries/france",
-      },
-      {
-        name: "Switzerland",
-        href: "/countries/switzerland",
-      },
-      {
-        name: "India",
-        href: "/countries/india",
-      },
-    ],
-  },
-  {
-    name: "Online Universities",
-    href: "/online-universities",
-  },
-  {
-    name: "Admissions",
-    href: "/admissions",
-  },
-  {
-    name: "Compare",
-    href: "/compare",
-  },
   {
     name: "About Us",
     href: "/about-us",
   },
-  {
-    name: "Career Guidance",
-    href: "/career-guidance",
-  },
-  {
-    name: "Scholarships",
-    href: "/scholarships",
-  },
+  // {
+  //   name: "Career Guidance",
+  //   href: "/career-guidance",
+  // },
   {
     name: "Blog",
     href: "/blog",
@@ -938,17 +1574,6 @@ export default function Navbar({
 }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  const [activeDropdown, setActiveDropdown] =
-    useState<string | null>(null);
-
-  const [countries, setCountries] = useState<
-    Array<{
-      name: string;
-      slug: string;
-      isActive?: boolean;
-    }>
-  >([]);
 
   const focusRing = `focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
     appearance === "dark"
@@ -979,107 +1604,11 @@ export default function Navbar({
   }, [flush]);
 
   // ==========================================
-  // FETCH COUNTRIES
-  // ==========================================
-
-  useEffect(() => {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_API_URL ||
-      "http://localhost:5000/api";
-
-    const controller = new AbortController();
-
-    fetch(`${apiUrl}/countries`, {
-      signal: controller.signal,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch countries");
-        }
-
-        return response.json();
-      })
-      .then(
-        (
-          items: Array<{
-            name: string;
-            slug: string;
-            isActive?: boolean;
-          }>
-        ) => {
-          if (Array.isArray(items)) {
-            setCountries(
-              items.filter(
-                (item) => item.isActive !== false
-              )
-            );
-          }
-        }
-      )
-      .catch((error) => {
-        if (error.name !== "AbortError") {
-          console.error(
-            "Failed to load countries:",
-            error
-          );
-        }
-      });
-
-    return () => controller.abort();
-  }, []);
-
-  // ==========================================
-  // DYNAMIC DESTINATIONS
-  // ==========================================
-
-  const liveNavigation: NavItem[] = navigation.map(
-    (item) => {
-      if (item.name !== "Destinations") {
-        return item;
-      }
-
-      const destinations = new Map(
-        (item.items || []).map((option) => [
-          option.name.trim().toLowerCase(),
-          option,
-        ])
-      );
-
-      countries.forEach((country) => {
-        const key = country.name.trim().toLowerCase();
-
-        if (!destinations.has(key)) {
-          destinations.set(key, {
-            name: country.name,
-            href: `/countries/${country.slug}`,
-          });
-        }
-      });
-
-      return {
-        ...item,
-        items: Array.from(destinations.values()),
-      };
-    }
-  );
-
-  // ==========================================
   // CLOSE MENU
   // ==========================================
 
   const closeMenu = () => {
     setMenuOpen(false);
-    setActiveDropdown(null);
-  };
-
-  // ==========================================
-  // TOGGLE MOBILE DROPDOWN
-  // ==========================================
-
-  const toggleDropdown = (name: string) => {
-    setActiveDropdown((current) =>
-      current === name ? null : name
-    );
   };
 
   // ==========================================
@@ -1097,9 +1626,7 @@ export default function Navbar({
       <nav
         aria-label="Main navigation"
         className={`mx-auto flex w-full items-center border border-[#eceae4] px-4 sm:px-6 lg:px-8 ${
-          appearance === "dark" && !flush
-            ? "min-h-[96px]"
-            : "min-h-[76px]"
+          appearance === "dark" && !flush ? "min-h-[96px]" : "min-h-[76px]"
         } ${
           flush
             ? `max-w-none rounded-none border-x-0 border-t-0 transition-colors duration-300 ${
@@ -1112,7 +1639,6 @@ export default function Navbar({
               : "max-w-[1520px] rounded-[24px] bg-[#f5f3ef]/90 shadow-[0_16px_42px_rgba(0,0,0,0.10)] backdrop-blur-2xl"
         }`}
       >
-
         {/* ==================================
             LOGO
         ================================== */}
@@ -1129,10 +1655,7 @@ export default function Navbar({
                 : "bg-[#171717] text-white"
             }`}
           >
-            <GraduationCap
-              size={22}
-              strokeWidth={1.8}
-            />
+            <GraduationCap size={22} strokeWidth={1.8} />
           </span>
 
           <span>
@@ -1171,151 +1694,22 @@ export default function Navbar({
             DESKTOP NAVIGATION
         ================================== */}
 
-        <div className="hidden min-w-0 flex-1 items-center justify-center gap-[2px] lg:flex xl:gap-1">
-
-          {liveNavigation.map((item) => (
-            <div
+        <div className="hidden min-w-0 flex-1 items-center justify-end gap-[2px] lg:flex xl:gap-1">
+          {navigation.map((item) => (
+            <Link
               key={item.name}
-              className="group relative"
+              href={item.href}
+              className={`inline-flex items-center gap-1 rounded-full px-[8px] py-3 text-[11px] font-semibold transition xl:px-[10px] xl:text-[12px] 2xl:px-3 ${
+                flush
+                  ? "text-white hover:bg-white/10 hover:text-[#d6b46c]"
+                  : appearance === "dark"
+                    ? "text-white hover:bg-white/10"
+                    : "text-[#343434] hover:bg-[#f1f1ed] hover:text-black"
+              } ${focusRing}`}
             >
-
-              {/* MAIN NAVIGATION LINK */}
-
-              <Link
-                href={item.href}
-                className={`inline-flex items-center gap-1 rounded-full px-[8px] py-3 text-[11px] font-semibold transition xl:px-[10px] xl:text-[12px] 2xl:px-3 ${
-                  flush
-                    ? "text-white hover:bg-white/10 hover:text-[#d6b46c]"
-                    : appearance === "dark"
-                      ? "text-white hover:bg-white/10"
-                      : "text-[#343434] hover:bg-[#f1f1ed] hover:text-black"
-                } ${focusRing}`}
-              >
-                {item.name}
-
-                {(item.name === "Programs" ||
-                  item.items) && (
-                  <ChevronDown
-                    size={13}
-                    className="transition-transform group-hover:rotate-180"
-                  />
-                )}
-              </Link>
-
-              {/* ==================================
-                  PROGRAMS DROPDOWN
-                  ONLY 5 MAIN PROGRAMS
-                  NO ARROWS
-                  NO VIEW ALL BUTTON
-              ================================== */}
-
-              {item.name === "Programs" && (
-                <div className="invisible absolute left-0 top-full z-50 w-[400px] translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-
-                  <div className="overflow-hidden rounded-[22px] border border-[#deded8] bg-white p-3 shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
-
-                    {/* DROPDOWN HEADER */}
-
-                    <div className="border-b border-[#ecece7] px-4 py-4">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#999990]">
-                        Explore Programs
-                      </p>
-
-                      <h3 className="mt-1 text-xl font-bold text-[#171717]">
-                        Find Your Program
-                      </h3>
-
-                      <p className="mt-1 text-xs text-[#888880]">
-                        Find the right course for your future.
-                      </p>
-                    </div>
-
-                    {/* PROGRAM LINKS */}
-
-                    <div className="py-2">
-
-                      {programs.map((program) => (
-                        <Link
-                          key={program.href}
-                          href={program.href}
-                          className={`block rounded-xl px-4 py-4 text-[14px] font-semibold text-[#454540] transition hover:bg-[#f5f3ef] hover:text-[#171717] ${focusRing}`}
-                        >
-                          {program.name}
-                        </Link>
-                      ))}
-
-                    </div>
-
-                  </div>
-                </div>
-              )}
-
-              {/* ==================================
-                  DESTINATIONS DROPDOWN
-              ================================== */}
-
-              {item.name === "Destinations" &&
-                item.items && (
-                  <div className="invisible absolute left-0 top-full z-50 w-64 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-
-                    <div className="max-h-[420px] overflow-y-auto rounded-2xl border border-[#deded8] bg-white p-2 shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
-
-                      {item.items.map((option) => (
-                        <Link
-                          key={option.name}
-                          href={option.href}
-                          className={`flex items-center justify-between rounded-xl px-3.5 py-3 text-sm font-medium text-[#3f3f3b] transition hover:bg-[#f1f1ed] ${focusRing}`}
-                        >
-                          {option.name}
-
-                          <ArrowRight
-                            size={14}
-                            className="text-[#77776f]"
-                          />
-                        </Link>
-                      ))}
-
-                    </div>
-                  </div>
-                )}
-
-            </div>
+              {item.name}
+            </Link>
           ))}
-
-        </div>
-
-        {/* ==================================
-            DESKTOP ACTION BUTTONS
-        ================================== */}
-
-        <div className="hidden shrink-0 items-center gap-2 lg:flex">
-
-          <Link
-            href="/programs"
-            aria-label="Search Programs"
-            className={`grid h-11 w-11 place-items-center rounded-full border transition ${
-              flush
-                ? "border-white/30 text-white hover:bg-white/10"
-                : appearance === "dark"
-                  ? "border-white/30 text-white hover:bg-white/10"
-                  : "border-[#deded8] hover:bg-[#f1f1ed]"
-            }`}
-          >
-            <Search size={18} />
-          </Link>
-
-          <Link
-            href="/contact"
-            className={`group inline-flex items-center gap-1.5 rounded-full px-4 py-3 text-xs font-bold transition hover:-translate-y-0.5 xl:px-5 xl:text-sm ${
-              flush || appearance === "dark"
-                ? "bg-white text-black hover:bg-[#e8e8e5]"
-                : "bg-[#171717] text-white"
-            } ${focusRing}`}
-          >
-            Get counselling
-            <ArrowRight size={15} />
-          </Link>
-
         </div>
 
         {/* ==================================
@@ -1324,28 +1718,17 @@ export default function Navbar({
 
         <button
           type="button"
-          aria-label={
-            menuOpen
-              ? "Close navigation"
-              : "Open navigation"
-          }
+          aria-label={menuOpen ? "Close navigation" : "Open navigation"}
           aria-expanded={menuOpen}
-          onClick={() =>
-            setMenuOpen((open) => !open)
-          }
+          onClick={() => setMenuOpen((open) => !open)}
           className={`ml-auto flex h-11 w-11 items-center justify-center rounded-xl border lg:hidden ${
             flush || appearance === "dark"
               ? "border-white/30 bg-black/20 text-white"
               : "border-[#deded8] bg-white text-[#171717]"
           } ${focusRing}`}
         >
-          {menuOpen ? (
-            <X size={21} />
-          ) : (
-            <Menu size={21} />
-          )}
+          {menuOpen ? <X size={21} /> : <Menu size={21} />}
         </button>
-
       </nav>
 
       {/* ==================================
@@ -1360,120 +1743,22 @@ export default function Navbar({
               : "mt-2 max-w-[1440px] rounded-[22px]"
           }`}
         >
-
-          {liveNavigation.map((item) => (
+          {navigation.map((item) => (
             <div
               key={item.name}
               className="border-b border-[#ecece7] last:border-0"
             >
-
-              {/* MOBILE MAIN LINK */}
-
-              <div className="flex items-center">
-
-                <Link
-                  href={item.href}
-                  onClick={closeMenu}
-                  className={`flex-1 rounded-xl px-3 py-3.5 text-sm font-semibold text-[#343434] hover:bg-[#f1f1ed] ${focusRing}`}
-                >
-                  {item.name}
-                </Link>
-
-                {/* DROPDOWN TOGGLE */}
-
-                {(item.name === "Programs" ||
-                  item.name === "Destinations") && (
-                  <button
-                    type="button"
-                    aria-label={`Toggle ${item.name} submenu`}
-                    aria-expanded={
-                      activeDropdown === item.name
-                    }
-                    onClick={() =>
-                      toggleDropdown(item.name)
-                    }
-                    className={`rounded-xl p-3 text-[#343434] hover:bg-[#f1f1ed] ${focusRing}`}
-                  >
-                    <ChevronDown
-                      size={18}
-                      className={`transition-transform ${
-                        activeDropdown === item.name
-                          ? "rotate-180"
-                          : ""
-                      }`}
-                    />
-                  </button>
-                )}
-
-              </div>
-
-              {/* ==================================
-                  MOBILE PROGRAMS
-                  ONLY 5 MAIN PROGRAMS
-                  NO ARROWS
-                  NO VIEW ALL
-              ================================== */}
-
-              {item.name === "Programs" &&
-                activeDropdown === "Programs" && (
-                  <div className="mb-3 ml-3 border-l border-[#d6d6cf] pl-3">
-
-                    {programs.map((program) => (
-                      <Link
-                        key={program.href}
-                        href={program.href}
-                        onClick={closeMenu}
-                        className="block rounded-lg px-3 py-3.5 text-sm font-medium text-[#686860] transition hover:bg-[#f1f1ed] hover:text-[#171717]"
-                      >
-                        {program.name}
-                      </Link>
-                    ))}
-
-                  </div>
-                )}
-
-              {/* ==================================
-                  MOBILE DESTINATIONS
-              ================================== */}
-
-              {item.name === "Destinations" &&
-                item.items &&
-                activeDropdown === "Destinations" && (
-                  <div className="mb-3 ml-3 border-l border-[#d6d6cf] pl-3">
-
-                    {item.items.map((option) => (
-                      <Link
-                        key={option.name}
-                        href={option.href}
-                        onClick={closeMenu}
-                        className={`block rounded-lg px-3 py-2.5 text-sm text-[#686860] transition hover:bg-[#f1f1ed] ${focusRing}`}
-                      >
-                        {option.name}
-                      </Link>
-                    ))}
-
-                  </div>
-                )}
-
+              <Link
+                href={item.href}
+                onClick={closeMenu}
+                className={`block rounded-xl px-3 py-3.5 text-sm font-semibold text-[#343434] hover:bg-[#f1f1ed] ${focusRing}`}
+              >
+                {item.name}
+              </Link>
             </div>
           ))}
-
-          {/* MOBILE COUNSELLING BUTTON */}
-
-          <div className="mt-4 pb-1">
-            <Link
-              href="/contact"
-              onClick={closeMenu}
-              className={`inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#171717] px-3 py-3 text-sm font-bold text-white ${focusRing}`}
-            >
-              Get counselling
-              <ArrowRight size={15} />
-            </Link>
-          </div>
-
         </div>
       )}
-
     </header>
   );
 }
