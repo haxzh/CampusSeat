@@ -18,7 +18,7 @@ import {
     steps,
     whyShortTerm,
 } from "@/src/data/shortTerm";
-import type { ShortTermCourse } from "@/src/data/shorerm";
+import type { ShortTermCourse } from "@/src/data/shortTerm";
 
 function PartnerLogo({ name, logo }: { name: string; logo?: string }) {
     return (
@@ -261,7 +261,7 @@ export default function ShortTermPage() {
                                 ))}
                             </ul>
                         </section>
-                        <EnquiryForm courseOptions={shortTermOptions} presetCourse={presetCourse} />
+                        {/* <EnquiryForm courseOptions={shortTermOptions} presetCourse={presetCourse} /> */}
                     </aside>
                 </section>
 

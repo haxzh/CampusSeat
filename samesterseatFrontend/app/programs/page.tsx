@@ -1044,6 +1044,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+
 import {
   Search,
   GraduationCap,
@@ -1647,7 +1648,7 @@ export default function CoursesPage() {
                 <article key={program.id} className="group relative flex min-h-[390px] flex-col overflow-hidden rounded-[1.6rem] border border-[#e5e9e1] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-[#b9cdbb] hover:shadow-[0_20px_50px_rgba(31,60,42,0.10)]">
                   <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#315b45] via-[#9bb99c] to-[#e4d2a9] opacity-0 transition group-hover:opacity-100" />
                   <div className="flex items-start justify-between gap-3">
-                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ring-1 ${accentStyles[program.accent] || "bg-[#edf3ec] text-[#315b45] ring-[#dce8dc]"}`}>
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ring-1 ${accentStyles[program.accent as keyof typeof accentStyles] || "bg-[#edf3ec] text-[#315b45] ring-[#dce8dc]"}`}>
                       <Icon size={25} strokeWidth={1.8} />
                     </div>
                     <span className="rounded-full bg-[#f3f6f1] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#607565]">{program.level}</span>
