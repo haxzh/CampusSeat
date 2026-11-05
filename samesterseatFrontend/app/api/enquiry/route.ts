@@ -1,5 +1,16 @@
 import { NextResponse } from "next/server";
-import { courseOptions } from "@/src/data/doctorate";
+import { courseOptions as bachelorCourseOptions } from "@/src/data/bachelor";
+import { courseOptions as professionalCourseOptions } from "@/src/data/courses";
+import { courseOptions as doctorateCourseOptions } from "@/src/data/doctorate";
+import { courseOptions as masterCourseOptions } from "@/src/data/master";
+import { getDatabase } from "@/lib/mongodb";
+
+const courseOptions = new Set([
+    ...bachelorCourseOptions,
+    ...masterCourseOptions,
+    ...doctorateCourseOptions,
+    ...professionalCourseOptions,
+]);
 
 type EnquiryBody = {
     name?: unknown;
@@ -48,7 +59,7 @@ export async function POST(request: Request) {
     if (totalPhoneDigits < 7 || totalPhoneDigits > 15) {
         return NextResponse.json({ error: "Enter a valid phone number and country code." }, { status: 400 });
     }
-    if (!courseOptions.includes(course)) {
+    if (!courseOptions.has(course)) {
         return NextResponse.json({ error: "Select a valid course." }, { status: 400 });
     }
     if (message.length > 2000) {
@@ -58,11 +69,32 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Please agree to be contacted before submitting." }, { status: 400 });
     }
 
-    // TODO: Persist this enquiry or notify the admissions team by email.
-    console.info("[DBA enquiry] Valid request received", {
-        course,
-        receivedAt: new Date().toISOString(),
-    });
+    const [firstName, ...lastNameParts] = name.split(/\s+/);
+    try {
+        const db = await getDatabase();
+        const now = new Date();
+        await db.collection("enquiries").insertOne({
+            name,
+            firstName,
+            lastName: lastNameParts.join(" "),
+            email,
+            countryCode,
+            phone,
+            course,
+            message,
+            consent: true,
+            status: "New",
+            source: "program-enquiry",
+            createdAt: now,
+            updatedAt: now,
+        });
+    } catch (error) {
+        console.error("Failed to save program enquiry.", error);
+        return NextResponse.json(
+            { error: "Unable to submit your request. Please try again." },
+            { status: 500 },
+        );
+    }
 
     return NextResponse.json(
         { success: true, message: "Thanks, our admissions team will contact you shortly." },

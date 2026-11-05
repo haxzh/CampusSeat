@@ -52,9 +52,13 @@ export default function PublicChrome({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {!ownsNavbar.has(pathname) && <Navbar />}
+      {!ownsNavbar.has(pathname) && (
+        <Navbar appearance={pathname === "/about-us" ? "dark" : "light"} />
+      )}
       {children}
-      {!ownsFooter.has(pathname) && <SiteFooter />}
+      {!ownsFooter.has(pathname) && (
+        <SiteFooter monochrome={pathname === "/about-us"} />
+      )}
     </>
   );
 }

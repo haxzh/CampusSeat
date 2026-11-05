@@ -133,10 +133,10 @@ export const modules = [
 export const partners = [
     {
         id: "partner-1",
-        name: "University partner 1",
-        country: "Country",
-        logo: "",
-        website: "",
+        name: "ITM University",
+        country: "India",
+        logo: "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&w=1000&q=85",
+        website: "itm.edu",
     },
     {
         id: "partner-2",

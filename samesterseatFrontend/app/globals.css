@@ -5,6 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --about-black: #0a0a0a;
+  --about-white: #ffffff;
+  --about-page: #f4f4f2;
+  --about-section: #e8e8e5;
+  --about-border: #d4d4d0;
+  --about-muted: #8a8a85;
+  --about-copy: #3a3a38;
+  --about-accent-light: #8a8a85;
+  --about-accent-dark: #bdbdb8;
   --campusseat-surface: #f4f3ee;
   --campusseat-paper: #ffffff;
   --campusseat-warm-paper: #fffaf2;

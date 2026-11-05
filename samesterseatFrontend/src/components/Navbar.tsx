@@ -92,8 +92,8 @@ const programCategories: ProgramCategory[] = [
   },
 
   {
-    name: "Skill-Based Education",
-    href: "/program/Skill-Based",
+    name: "Professional Education",
+    href: "/programs/professional",
     courses: [
       { name: "Full Stack Development", slug: "full-stack-development" },
       { name: "Artificial Intelligence", slug: "artificial-intelligence" },
@@ -106,36 +106,36 @@ const programCategories: ProgramCategory[] = [
     ],
   },
 
-  {
-    name: "Executive Education",
-    href: "/programs/executive",
-    courses: [
-      { name: "Executive MBA", slug: "executive-mba" },
-      { name: "Executive DBA", slug: "executive-dba" },
-      { name: "Executive Leadership", slug: "executive-leadership" },
-      { name: "Strategic Management", slug: "strategic-management" },
-      { name: "Business Transformation", slug: "business-transformation" },
-      {name: "Innovation & Entrepreneurship", slug: "innovation-entrepreneurship" },
-      { name: "Global Business Strategy", slug: "global-business-strategy" },
-    ],
-  },
+  // {
+  //   name: "Executive Education",
+  //   href: "/programs/executive",
+  //   courses: [
+  //     { name: "Executive MBA", slug: "executive-mba" },
+  //     { name: "Executive DBA", slug: "executive-dba" },
+  //     { name: "Executive Leadership", slug: "executive-leadership" },
+  //     { name: "Strategic Management", slug: "strategic-management" },
+  //     { name: "Business Transformation", slug: "business-transformation" },
+  //     {name: "Innovation & Entrepreneurship", slug: "innovation-entrepreneurship" },
+  //     { name: "Global Business Strategy", slug: "global-business-strategy" },
+  //   ],
+  // },
 
-  {
-    name: "Diploma Programs",
-    href: "/programs/diploma",
-    courses: [
-      { name: "Diploma in Computer Applications", slug: "dca" },
-      { name: "Diploma in Engineering", slug: "engineering" },
-      { name: "Diploma in Mechanical Engineering", slug: "mechanical-engineering" },
-      { name: "Diploma in Civil Engineering", slug: "civil-engineering" },
-      { name: "Diploma in Hotel Management", slug: "hotel-management" },
-      { name: "Diploma in Nursing", slug: "nursing" },
-    ],
-  },
+  // {
+  //   name: "Diploma Programs",
+  //   href: "/programs/diploma",
+  //   courses: [
+  //     { name: "Diploma in Computer Applications", slug: "dca" },
+  //     { name: "Diploma in Engineering", slug: "engineering" },
+  //     { name: "Diploma in Mechanical Engineering", slug: "mechanical-engineering" },
+  //     { name: "Diploma in Civil Engineering", slug: "civil-engineering" },
+  //     { name: "Diploma in Hotel Management", slug: "hotel-management" },
+  //     { name: "Diploma in Nursing", slug: "nursing" },
+  //   ],
+  // },
 
   {
     name: "Short-Term Courses",
-    href: "/Programs/Short-Term-Courses",
+    href: "/programs/short-term",
     courses: [
       { name: "IELTS Preparation", slug: "ielts" },
       { name: "English Language", slug: "english-language" },
@@ -182,15 +182,12 @@ const navigation: NavItem[] = [
   { name: "Online Universities", href: "/online-universities" },
   { name: "Admissions", href: "/admissions" },
   { name: "Compare", href: "/compare" },
-  { name: "About Us", href: "/about" },
+  { name: "About Us", href: "/about-us" },
   { name: "Career Guidance", href: "/career-guidance" },
   { name: "Scholarships", href: "/scholarships" },
   // { name: "Counselling", href: "/counselling" },
   { name: "Blog", href: "/blog" },
 ];
-
-const focusRing =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171717]";
 
 // ==========================================
 // NAVBAR COMPONENT
@@ -199,19 +196,27 @@ const focusRing =
 type NavbarProps = {
   brandName?: string;
   brandTagline?: string;
+  flush?: boolean;
+  appearance?: "light" | "dark";
 };
 
 export default function Navbar({
   brandName = "CampusSeat",
   brandTagline = "Find your way forward",
+  flush = false,
+  appearance = "light",
 }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const [activeProgram, setActiveProgram] = useState<ProgramCategory>(
     programCategories[1]
   );
+  const focusRing = `focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+    appearance === "dark" ? "focus-visible:outline-white" : "focus-visible:outline-[#171717]"
+  }`;
 
   const [activeMobileProgram, setActiveMobileProgram] = useState<string | null>(
     "Bachelor's Programs"
@@ -220,6 +225,15 @@ export default function Navbar({
   const [countries, setCountries] = useState<
     Array<{ name: string; slug: string; isActive?: boolean }>
   >([]);
+
+  useEffect(() => {
+    if (!flush) return;
+
+    const updateScrolledState = () => setIsScrolled(window.scrollY > 48);
+    updateScrolledState();
+    window.addEventListener("scroll", updateScrolledState, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrolledState);
+  }, [flush]);
 
   // ==========================================
   // FETCH COUNTRIES
@@ -284,29 +298,33 @@ export default function Navbar({
   };
 
   // ==========================================
-  // GET ACTIVE PROGRAM
-  // ==========================================
-
-  const selectProgram = (name: string) => {
-    const selected = programCategories.find(
-      (program) => program.name === name
-    );
-
-    if (selected) {
-      setActiveProgram(selected);
-    }
-  };
-
-  // ==========================================
   // JSX
   // ==========================================
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-transparent px-3 py-3 sm:px-5 lg:px-8">
+    <header
+      className={
+        flush || appearance === "dark"
+          ? "fixed inset-x-0 top-0 z-50 w-full"
+          : "fixed inset-x-0 top-0 z-50 px-2 py-2 sm:px-4 lg:px-1"
+      }
+    >
 
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex min-h-[76px] max-w-[1440px] items-center rounded-[22px] border border-white/70 bg-white/80 px-4 shadow-[0_12px_38px_rgba(0,0,0,0.10)] backdrop-blur-xl sm:px-6 lg:px-8"
+        className={`mx-auto flex w-full items-center border border-[#eceae4] px-4 sm:px-6 lg:px-8 ${
+          appearance === "dark" && !flush ? "min-h-[96px]" : "min-h-[76px]"
+        } ${
+          flush
+            ? `max-w-none rounded-none border-x-0 border-t-0 transition-colors duration-300 ${
+                isScrolled
+                  ? "border-white/10 bg-black shadow-[0_12px_38px_rgba(0,0,0,0.25)]"
+                  : "border-transparent bg-transparent shadow-none"
+              }`
+            : appearance === "dark"
+              ? "max-w-none rounded-none border-0 bg-black shadow-none"
+              : "max-w-[1520px] rounded-[24px] bg-[#f5f3ef]/90 shadow-[0_16px_42px_rgba(0,0,0,0.10)] backdrop-blur-2xl"
+        }`}
       >
 
         {/* ==================================
@@ -318,16 +336,16 @@ export default function Navbar({
           onClick={closeMenu}
           className={`group flex shrink-0 items-center gap-3 rounded-xl ${focusRing}`}
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#171717] text-white transition-transform group-hover:-rotate-3">
+          <span className={`flex h-10 w-10 items-center justify-center rounded-[13px] transition-transform group-hover:-rotate-3 ${flush || appearance === "dark" ? "bg-white text-black" : "bg-[#171717] text-white"}`}>
             <GraduationCap size={22} strokeWidth={1.8} />
           </span>
 
           <span>
-            <span className="block text-[21px] font-bold leading-none tracking-[-0.055em] text-[#171717] sm:text-[23px]">
-              {brandName}<span className="text-[#77776f]">.</span>
+            <span className={`block text-[21px] font-bold leading-none tracking-[-0.055em] sm:text-[23px] ${flush || appearance === "dark" ? "text-white" : "text-[#171717]"}`}>
+              {brandName}<span className={flush || appearance === "dark" ? "text-white/60" : "text-[#77776f]"}>.</span>
             </span>
 
-            <span className="mt-1 block text-[8px] font-bold uppercase tracking-[0.22em] text-[#77776f]">
+            <span className={`mt-1 block text-[8px] font-bold uppercase tracking-[0.22em] ${flush || appearance === "dark" ? "text-white/65" : "text-[#77776f]"}`}>
               {brandTagline}
             </span>
           </span>
@@ -350,7 +368,7 @@ export default function Navbar({
 
               <Link
                 href={item.href}
-                className={`inline-flex items-center gap-1 rounded-full px-[8px] py-3 text-[11px] font-semibold text-[#343434] transition hover:bg-[#f1f1ed] hover:text-black xl:px-[10px] xl:text-[12px] 2xl:px-3 ${focusRing}`}
+                className={`inline-flex items-center gap-1 rounded-full px-[8px] py-3 text-[11px] font-semibold transition xl:px-[10px] xl:text-[12px] 2xl:px-3 ${flush ? "text-white hover:bg-white/10 hover:text-[#d6b46c]" : appearance === "dark" ? "text-white hover:bg-white/10 hover:text-white" : "text-[#343434] hover:bg-[#f1f1ed] hover:text-black"} ${focusRing}`}
               >
                 {item.name}
 
@@ -521,14 +539,24 @@ export default function Navbar({
           <Link
             href="/programs"
             aria-label="Search Programs"
-            className="grid h-11 w-11 place-items-center rounded-full border border-[#deded8] transition hover:bg-[#f1f1ed]"
+            className={`grid h-11 w-11 place-items-center rounded-full border transition ${
+              flush
+                ? "border-white/30 text-white hover:bg-white/10"
+                : appearance === "dark"
+                  ? "border-white/30 text-white hover:bg-white/10"
+                  : "border-[#deded8] hover:bg-[#f1f1ed]"
+            }`}
           >
             <Search size={18} />
           </Link>
 
           <Link
             href="/contact"
-            className={`group inline-flex items-center gap-1.5 rounded-full bg-[#171717] px-4 py-3 text-xs font-bold text-white transition hover:-translate-y-0.5 xl:px-5 xl:text-sm ${focusRing}`}
+            className={`group inline-flex items-center gap-1.5 rounded-full px-4 py-3 text-xs font-bold transition hover:-translate-y-0.5 xl:px-5 xl:text-sm ${
+              flush || appearance === "dark"
+                ? `bg-white text-black ${appearance === "dark" ? "hover:bg-[#e8e8e5]" : "hover:bg-[#d6b46c]"}`
+                : "bg-[#171717] text-white"
+            } ${focusRing}`}
           >
             Get counselling
             <ArrowRight size={15} />
@@ -545,7 +573,11 @@ export default function Navbar({
           aria-label={menuOpen ? "Close navigation" : "Open navigation"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
-          className={`ml-auto flex h-11 w-11 items-center justify-center rounded-xl border border-[#deded8] bg-white text-[#171717] lg:hidden ${focusRing}`}
+          className={`ml-auto flex h-11 w-11 items-center justify-center rounded-xl border lg:hidden ${
+            flush || appearance === "dark"
+              ? "border-white/30 bg-black/20 text-white"
+              : "border-[#deded8] bg-white text-[#171717]"
+          } ${focusRing}`}
         >
           {menuOpen ? <X size={21} /> : <Menu size={21} />}
         </button>
@@ -558,7 +590,13 @@ export default function Navbar({
 
       {menuOpen && (
 
-        <div className="mx-auto mt-2 max-h-[calc(100vh-110px)] max-w-[1440px] overflow-y-auto rounded-[22px] border border-[#deded8] bg-white p-3 shadow-[0_24px_60px_rgba(0,0,0,0.16)] lg:hidden">
+        <div
+          className={`mx-auto max-h-[calc(100vh-76px)] w-full overflow-y-auto border border-[#deded8] bg-white p-3 shadow-[0_24px_60px_rgba(0,0,0,0.16)] lg:hidden ${
+            flush
+              ? "rounded-none border-x-0"
+              : "mt-2 max-w-[1440px] rounded-[22px]"
+          }`}
+        >
 
           {liveNavigation.map((item) => (
 
