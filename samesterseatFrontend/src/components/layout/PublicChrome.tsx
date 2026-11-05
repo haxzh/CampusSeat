@@ -8,6 +8,7 @@ import SiteFooter from "./SiteFooter";
 const ownsNavbar = new Set([
   "/",
   "/admissions",
+  "/blog",
   "/career-guidance",
   "/colleges",
   "/colleges/engineering",
@@ -22,6 +23,7 @@ const ownsNavbar = new Set([
   "/countries/germany",
   "/countries/india",
   "/countries/japan",
+  "/countries/malta",
   "/countries/singapore",
   "/countries/switzerland",
   "/countries/uae",
@@ -30,6 +32,11 @@ const ownsNavbar = new Set([
   "/login",
   "/online-universities",
   "/program",
+  "/programs/bachelor",
+  "/programs/doctorate",
+  "/programs/master",
+  "/programs/professional",
+  "/programs/short-term",
   "/reviews",
   "/signup",
 ]);
@@ -52,8 +59,8 @@ export default function PublicChrome({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {!ownsNavbar.has(pathname) && (
-        <Navbar appearance={pathname === "/about-us" ? "dark" : "light"} />
+      {!(ownsNavbar.has(pathname) || /^\/colleges\/[^/]+$/.test(pathname)) && (
+        <Navbar appearance="dark" />
       )}
       {children}
       {!ownsFooter.has(pathname) && (

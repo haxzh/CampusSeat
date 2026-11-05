@@ -1,3 +1,10 @@
+import lmst from "../screens/images/lsmtuniversity.jpg";
+import eimt from "../screens/images/eimtlogo.png";
+import Birchwood from "../screens/images/birchwoodlogo.png";
+import OleMiss from "../screens/images/olemiss.png";
+import Ajman from "../screens/images/ajmanlogo.png";
+import Itmu from "../screens/images/itmuniversity.png";
+import Utah from "../screens/images/Utahlogo.png";  
 import {
     BookOpenCheck,
     BriefcaseBusiness,
@@ -133,18 +140,59 @@ export const modules = [
 export const partners = [
     {
         id: "partner-1",
-        name: "ITM University",
-        country: "India",
-        logo: "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&w=1000&q=85",
-        website: "itm.edu",
+        name: "EIMT University",
+        country: "Malta",
+        logo: eimt.src,
+        website: "https://www.eimt.edu.eu/",
     },
     {
         id: "partner-2",
-        name: "University partner 2",
-        country: "Country",
-        logo: "",
-        website: "",
+        name: "London School of Management and Technology",
+        country: "United Kingdom",
+        logo: lmst.src,
+        website: "https://lsmt.org.uk/",
     },
+    {
+        id: "partner-3",
+        name: "Birchwood University",
+        country: "United States",
+        logo: Birchwood.src,
+        website: "https://www.birchwood.edu/",
+    },
+    {
+        id: "partner-4",
+        name: "Ajman University",
+        country: "United Arab Emirates",
+        logo: Ajman.src,
+        website: "https://www.ajman.ac.ae/",
+    },
+    {
+        id: "partner-5",
+        name: "University of Mississippi",
+        country: "United States",
+        logo: OleMiss.src,
+        website: "https://olemiss.edu/",
+    },
+    {
+        id: "partner-6",
+        name: "ITM University",
+        country: "India",
+        logo: Itmu.src,
+        website: "https://www.itmuniversity.ac.in/",
+    },
+    {
+        id: "partner-7",
+        name: "University of Utah",
+        country: "United States",
+        logo: Utah.src,
+        website: "https://www.utah.edu/",
+    }
+
+
+
+
+
+    
 ] as const;
 
 export const graduateOutcomes = [

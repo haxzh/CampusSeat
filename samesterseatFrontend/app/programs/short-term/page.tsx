@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, BarChart3, Check, Clock3, MapPin, Video, X } from "lucide-react";
+import { ArrowUpRight, BarChart3, Check, Clock3, Video, X } from "lucide-react";
 import Navbar from "@/src/components/Navbar";
 import EnquiryForm from "@/src/components/EnquiryForm";
-import { partners } from "@/src/data/doctorate";
+import UniversityPartnersCarousel from "@/src/components/UniversityPartnersCarousel";
 import {
     shortTermCourses,
     shortTermFaqs,
@@ -19,28 +19,6 @@ import {
     whyShortTerm,
 } from "@/src/data/shortTerm";
 import type { ShortTermCourse } from "@/src/data/shortTerm";
-
-function PartnerLogo({ name, logo }: { name: string; logo?: string }) {
-    return (
-        <div className="relative flex h-[68px] w-[68px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#e3e0d6] bg-white text-[18px] font-semibold text-[#77776f] shadow-sm">
-            <span aria-hidden="true">{name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</span>
-            {logo && (
-                <Image
-                    src={logo}
-                    alt={`${name} logo`}
-                    fill
-                    sizes="68px"
-                    unoptimized
-                    loading="lazy"
-                    onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                    }}
-                    className="absolute inset-0 h-full w-full bg-white object-contain p-2"
-                />
-            )}
-        </div>
-    );
-}
 
 export default function ShortTermPage() {
     const reduceMotion = useReducedMotion();
@@ -241,25 +219,7 @@ export default function ShortTermPage() {
                                 University Partners
                                 <span className="absolute bottom-0 left-0 h-[3px] w-12 rounded-full bg-[#b18b52]" />
                             </h2>
-                            <ul className="mt-5 space-y-3">
-                                {partners.map((partner) => (
-                                    <li key={partner.id} className="flex items-center gap-4 rounded-2xl border border-[#e3e0d6] bg-[#fffefa] p-3">
-                                        <PartnerLogo name={partner.name} logo={partner.logo} />
-                                        <div className="min-w-0">
-                                            <p className="font-semibold leading-5">{partner.name}</p>
-                                            <p className="mt-1 flex items-center gap-1.5 text-[12px] text-[#6b6d64]">
-                                                <MapPin size={13} aria-hidden="true" />
-                                                {partner.country}
-                                            </p>
-                                            {partner.website && (
-                                                <Link href={partner.website} className="mt-1 inline-flex text-[12px] font-medium text-[#77776f] underline underline-offset-2">
-                                                    Visit website
-                                                </Link>
-                                            )}
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                            <UniversityPartnersCarousel />
                         </section>
                         {/* <EnquiryForm courseOptions={shortTermOptions} presetCourse={presetCourse} /> */}
                     </aside>

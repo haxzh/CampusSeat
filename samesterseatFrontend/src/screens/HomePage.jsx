@@ -1411,6 +1411,7 @@ export default function HomePage() {
                 brandName="CampusSeat"
                 brandTagline="A Global Education Ecosystem"
                 flush
+                appearance="light"
             />
 
             {/* ============================ HERO ============================ */}

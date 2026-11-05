@@ -351,6 +351,15 @@ function InterestForm() {
 }
 
 function PartnerCard() {
+    const reduceMotion = useReducedMotion();
+    const visiblePartners = Math.min(3, partners.length);
+    const hasMorePartners = partners.length > visiblePartners;
+    const cardHeight = 120;
+    const cardGap = 12;
+    const carouselPartners = hasMorePartners
+        ? [...partners, ...partners]
+        : partners;
+
     return (
         <section
             aria-labelledby="partners-heading"
@@ -363,10 +372,37 @@ function PartnerCard() {
                 University Partners
                 <span className="absolute bottom-0 left-0 h-[3px] w-12 rounded-full bg-[#b18b52]" />
             </h2>
-            <ul className="mt-5 space-y-3">
-                {partners.map((partner) => (
-                    <li key={partner.id}>
-                        <div className="flex items-center gap-4 rounded-2xl border border-[#e3e0d6] bg-[#fffefa] p-3">
+            <div
+                className="mt-5 overflow-hidden"
+                style={{
+                    height: visiblePartners * cardHeight + (visiblePartners - 1) * cardGap,
+                }}
+            >
+                <motion.ul
+                    aria-label="University partners"
+                    className="flex flex-col gap-3"
+                    animate={
+                        hasMorePartners && !reduceMotion
+                            ? { y: [0, -partners.length * (cardHeight + cardGap)] }
+                            : { y: 0 }
+                    }
+                    transition={
+                        hasMorePartners && !reduceMotion
+                            ? {
+                                duration: partners.length * 2.8,
+                                ease: "linear",
+                                repeat: Infinity,
+                            }
+                            : { duration: 0 }
+                    }
+                >
+                {carouselPartners.map((partner, index) => (
+                    <li key={`${index}-${partner.id}`}>
+                        <div
+                            aria-hidden={index >= partners.length ? true : undefined}
+                            inert={index >= partners.length}
+                            className="flex h-[120px] items-center gap-4 overflow-hidden rounded-2xl border border-[#e3e0d6] bg-[#fffefa] p-3"
+                        >
                             <div
                                 className="relative flex h-[68px] w-[68px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#e3e0d6] bg-white text-[18px] font-semibold text-[#77776f] shadow-sm"
                             >
@@ -394,7 +430,7 @@ function PartnerCard() {
                                 )}
                             </div>
                             <div className="min-w-0">
-                                <p className="font-semibold leading-5">{partner.name}</p>
+                                <p className="line-clamp-2 font-semibold leading-5">{partner.name}</p>
                                 <p className="mt-1 flex items-center gap-1.5 text-[12px] text-[#6b6d64]">
                                     <MapPin size={13} aria-hidden="true" />
                                     {partner.country}
@@ -411,7 +447,8 @@ function PartnerCard() {
                         </div>
                     </li>
                 ))}
-            </ul>
+                </motion.ul>
+            </div>
         </section>
     );
 }

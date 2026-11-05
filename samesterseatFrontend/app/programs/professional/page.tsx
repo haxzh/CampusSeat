@@ -4,10 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, BarChart3, Check, Clock3, MapPin, Search, X } from "lucide-react";
+import { ArrowUpRight, BarChart3, Check, Clock3, Search, X } from "lucide-react";
 import Navbar from "@/src/components/Navbar";
 import EnquiryForm from "./Enquiryform";
-import { partners } from "@/src/data/doctorate";
+import UniversityPartnersCarousel from "@/src/components/UniversityPartnersCarousel";
 import {
     categories,
     courseOptions,
@@ -30,28 +30,6 @@ const levelStyle: Record<Course["level"], string> = {
     Intermediate: "bg-amber-50 text-amber-800 border-amber-200",
     Advanced: "bg-rose-50 text-rose-800 border-rose-200",
 };
-
-function PartnerLogo({ name, logo }: { name: string; logo?: string }) {
-    return (
-        <div className="relative flex h-[68px] w-[68px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#e3e0d6] bg-white text-[18px] font-semibold text-[#77776f] shadow-sm">
-            <span aria-hidden="true">{name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</span>
-            {logo && (
-                <Image
-                    src={logo}
-                    alt={`${name} logo`}
-                    fill
-                    sizes="68px"
-                    unoptimized
-                    loading="lazy"
-                    onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                    }}
-                    className="absolute inset-0 h-full w-full bg-white object-contain p-2"
-                />
-            )}
-        </div>
-    );
-}
 
 export default function CoursesPage() {
     const reduceMotion = useReducedMotion();
@@ -359,25 +337,7 @@ export default function CoursesPage() {
                                 University Partners
                                 <span className="absolute bottom-0 left-0 h-[3px] w-12 rounded-full bg-[#b18b52]" />
                             </h2>
-                            <ul className="mt-5 space-y-3">
-                                {partners.map((partner) => (
-                                    <li key={partner.id} className="flex items-center gap-4 rounded-2xl border border-[#e3e0d6] bg-[#fffefa] p-3">
-                                        <PartnerLogo name={partner.name} logo={partner.logo} />
-                                        <div className="min-w-0">
-                                            <p className="font-semibold leading-5">{partner.name}</p>
-                                            <p className="mt-1 flex items-center gap-1.5 text-[12px] text-[#6b6d64]">
-                                                <MapPin size={13} aria-hidden="true" />
-                                                {partner.country}
-                                            </p>
-                                            {partner.website && (
-                                                <Link href={partner.website} className="mt-1 inline-flex text-[12px] font-medium text-[#77776f] underline underline-offset-2">
-                                                    Visit website
-                                                </Link>
-                                            )}
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                            <UniversityPartnersCarousel />
                         </section>
                         <EnquiryForm courseOptions={courseOptions} presetCourse={presetCourse} />
                     </aside>
@@ -480,7 +440,7 @@ export default function CoursesPage() {
                 </section>
 
                 {/* PARTNERS SHOWCASE */}
-                <section aria-labelledby="partner-showcase-heading" className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 sm:py-20 lg:px-14">
+                {/* <section aria-labelledby="partner-showcase-heading" className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 sm:py-20 lg:px-14">
                     <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#77776f]">Academic network</p>
                     <h2 id="partner-showcase-heading" className="mt-3 max-w-3xl text-[35px] font-semibold leading-[1.08] tracking-[-0.055em] sm:text-5xl">
                         Our partner{" "}
@@ -504,7 +464,7 @@ export default function CoursesPage() {
                             </li>
                         ))}
                     </ul>
-                </section>
+                </section> */}
 
                 {/* FAQ */}
                 <section className="mx-auto grid max-w-[1500px] gap-8 px-5 pb-16 sm:px-8 sm:pb-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14 lg:px-14">
