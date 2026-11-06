@@ -4,7 +4,9 @@ import { GraduationCap } from "lucide-react";
 const groups = [
   { title: "Explore", links: [["Find colleges", "/colleges"], ["Explore courses", "/program"], ["Compare colleges", "/compare"], ["Online universities", "/online-universities"]] },
   { title: "Resources", links: [["Career guidance", "/career-guidance"], ["Scholarships", "/scholarships"], ["Admission guide", "/admissions"], ["Student reviews", "/reviews"]] },
-  { title: "Company", links: [["Contact", "/contact"], ["Privacy policy", "/privacy-policy"], ["Terms of use", "/terms"]] },
+  { title: "Company", links: [["Contact", "/contact"], ["Privacy policy", "/privacy-policy"],
+    //  ["Terms of use", "/privacy-policy"]
+    ] },
 ] as const;
 
 export default function SiteFooter({ monochrome = false }: { monochrome?: boolean }) {

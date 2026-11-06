@@ -33,12 +33,12 @@ import {
   Globe2,
   Laptop,
   Lightbulb,
-  LoaderCircle,
   Search,
   ShieldCheck,
   Users,
   X,
 } from "lucide-react";
+import LoadingButton from "@/src/components/ui/LoadingButton";
 
 import {
   bachelorProgrammes,
@@ -925,12 +925,12 @@ function InterestForm({ presetCourse = "", courseOptions = [] }: InlineInterestF
       </div>
       {error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-xs leading-5 text-red-700">{error}</p>}
       {status === "error" && !error && <p role="alert" className="mt-4 text-xs text-red-700">Unable to submit. Please try again.</p>}
-      <button type="submit" disabled={status === "loading"} className="group mt-5 inline-flex min-h-12 w-full items-center justify-between rounded-full bg-[#171717] py-1.5 pl-5 pr-2 text-sm font-semibold text-white transition hover:bg-[#3c3b34] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b18b52] disabled:cursor-wait disabled:opacity-70">
-        {status === "loading" ? "Sending enquiry…" : "Submit enquiry"}
+      <LoadingButton type="submit" loading={status === "loading"} loadingText="Sending enquiry..." className="group mt-5 inline-flex min-h-12 w-full items-center justify-between rounded-full bg-[#171717] py-1.5 pl-5 pr-2 text-sm font-semibold text-white transition hover:bg-[#3c3b34] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b18b52] disabled:cursor-wait disabled:opacity-70">
+        Submit enquiry
         <span className="grid h-9 w-9 place-items-center rounded-full bg-white/15 transition-transform duration-300 group-hover:rotate-45">
-          {status === "loading" ? <LoaderCircle size={17} className="animate-spin" /> : <ArrowUpRight size={18} />}
+          <ArrowUpRight size={18} />
         </span>
-      </button>
+      </LoadingButton>
     </form>
   );
 }

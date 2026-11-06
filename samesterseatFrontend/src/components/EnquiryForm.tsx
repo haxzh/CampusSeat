@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { CheckCircle2, Send } from "lucide-react";
+import LoadingButton from "@/src/components/ui/LoadingButton";
 
 type Props = { university?: string; country?: string; compact?: boolean };
 
@@ -20,15 +21,20 @@ export default function EnquiryForm({ university = "", country = "", compact = f
         event.preventDefault();
         setLoading(true);
         setError("");
-        const response = await fetch("/api/enquiries", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
-        });
-        const data = await response.json();
-        if (!response.ok) setError(data.error || "Unable to submit your enquiry.");
-        else setReference(data.reference);
-        setLoading(false);
+        try {
+            const response = await fetch("/api/enquiries", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+            const data = await response.json();
+            if (!response.ok) setError(data.error || "Unable to submit your enquiry.");
+            else setReference(data.reference);
+        } catch {
+            setError("Unable to submit your enquiry. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     }
 
     if (reference) return (
@@ -74,9 +80,9 @@ export default function EnquiryForm({ university = "", country = "", compact = f
                 I consent to CampusSeat contacting me about study options and counselling.
             </label>
             {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-            <button disabled={loading} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 py-3.5 text-sm font-bold text-white disabled:opacity-60">
-                <Send size={16} /> {loading ? "Submitting..." : "Request counselling"}
-            </button>
+            <LoadingButton loading={loading} loadingText="Submitting..." className="flex w-full rounded-xl bg-[#171717] px-5 py-3.5 text-sm font-bold text-white">
+                <Send size={16} /> Request counselling
+            </LoadingButton>
         </form>
     );
 }

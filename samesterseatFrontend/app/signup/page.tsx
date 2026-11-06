@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import PublicShell from "@/src/components/layout/PublicShell";
+import LoadingButton from "@/src/components/ui/LoadingButton";
 import {
   GraduationCap,
   UserRound,
@@ -324,15 +325,16 @@ export default function SignupPage() {
                   </div>
                 </div>
 
-                <button
+                <LoadingButton
                   type="button"
                   onClick={sendOtp}
-                  disabled={loading}
+                  loading={loading}
+                  loadingText="Sending OTP..."
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 py-4 font-semibold text-white shadow-lg transition hover:bg-black disabled:opacity-60"
                 >
-                  {loading ? "Sending OTP..." : "Send OTP"}
+                  Send OTP
                   <ArrowRight size={19} />
-                </button>
+                </LoadingButton>
               </>
             ) : (
               <>
@@ -373,14 +375,15 @@ export default function SignupPage() {
                   />
                 </div>
 
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={loading}
+                  loading={loading}
+                  loadingText="Verifying..."
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 py-4 font-semibold text-white shadow-lg transition hover:bg-black disabled:opacity-60"
                 >
-                  {loading ? "Verifying..." : "Verify OTP & Create Account"}
+                  Verify OTP & Create Account
                   <ArrowRight size={19} />
-                </button>
+                </LoadingButton>
 
                 <button
                   type="button"

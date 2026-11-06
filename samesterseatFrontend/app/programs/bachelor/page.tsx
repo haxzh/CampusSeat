@@ -364,6 +364,7 @@ import {
     X,
 } from "lucide-react";
 import Navbar from "@/src/components/Navbar";
+import LoadingButton from "@/src/components/ui/LoadingButton";
 import { partners } from "@/src/data/doctorate";
 import UniversityPartnersCarousel from "@/src/components/UniversityPartnersCarousel";
 import {
@@ -621,16 +622,17 @@ function InterestForm({ presetCourse }: { presetCourse: string }) {
 
                     {submitError && <p role="alert" className="text-[13px] leading-5 text-red-700">{submitError}</p>}
 
-                    <button
+                    <LoadingButton
                         type="submit"
-                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                        loadingText="Submitting request..."
                         className="group/submit inline-flex min-h-14 w-full items-center justify-between rounded-full bg-[#171717] py-2 pl-6 pr-2 text-[14px] font-semibold text-white transition-colors hover:bg-[#77776f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#77776f] disabled:cursor-wait disabled:opacity-70"
                     >
-                        {isSubmitting ? "Submitting…" : "Submit Request"}
+                        Submit Request
                         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover/submit:rotate-45">
                             <ArrowUpRight size={18} aria-hidden="true" />
                         </span>
-                    </button>
+                    </LoadingButton>
 
                     <div className="flex items-start gap-2 text-[12px] leading-5 text-[#6b6d64]">
                         <input

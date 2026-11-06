@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Navbar from "@/src/components/Navbar";
+import LoadingButton from "@/src/components/ui/LoadingButton";
 import { CalendarDays, CheckCircle2 } from "lucide-react";
 
 export default function CounsellingPage() {
@@ -12,12 +13,17 @@ export default function CounsellingPage() {
     async function submit(event: FormEvent) {
         event.preventDefault();
         setLoading(true); setError("");
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
-        const response = await fetch(`${apiUrl}/counselling`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-        const data = await response.json();
-        if (!response.ok) setError(data.error || "Unable to request counselling.");
-        else setReference(data.reference);
-        setLoading(false);
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+            const response = await fetch(`${apiUrl}/counselling`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+            const data = await response.json();
+            if (!response.ok) setError(data.error || "Unable to request counselling.");
+            else setReference(data.reference);
+        } catch {
+            setError("Unable to request counselling. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     }
     const set = (key: keyof typeof form, value: string) => setForm((current) => ({ ...current, [key]: value }));
     const input = "mt-2 w-full rounded-xl border border-[#d8d8d1] px-4 py-3 text-sm outline-none focus:border-[#171717]";
@@ -41,7 +47,7 @@ export default function CounsellingPage() {
                                 <div className="grid gap-4 sm:grid-cols-2"><label className="text-sm font-semibold">Topic<select value={form.topic} onChange={(e) => set("topic", e.target.value)} className={input}><option>General counselling</option><option>Country selection</option><option>Course selection</option><option>University selection</option><option>Scholarship guidance</option></select></label><label className="text-sm font-semibold">Communication<select value={form.method} onChange={(e) => set("method", e.target.value)} className={input}><option>Video call</option><option>Phone call</option><option>WhatsApp</option></select></label></div>
                                 <label className="block text-sm font-semibold">Additional message<textarea rows={4} value={form.message} onChange={(e) => set("message", e.target.value)} className={input} /></label>
                                 {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-                                <button disabled={loading} className="w-full rounded-xl bg-[#171717] py-3.5 text-sm font-bold text-white">{loading ? "Booking..." : "Request free counselling"}</button>
+                                <LoadingButton loading={loading} loadingText="Booking..." className="w-full rounded-xl bg-[#171717] py-3.5 text-sm font-bold text-white">Request free counselling</LoadingButton>
                             </form>}
                     </section>
                 </div>

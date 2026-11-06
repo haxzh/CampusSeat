@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import LoadingButton from "@/src/components/ui/LoadingButton";
 import {
     GraduationCap,
     Mail,
@@ -24,6 +25,7 @@ export default function ContactPage() {
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -40,32 +42,39 @@ export default function ContactPage() {
             return;
         }
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
-        const response = await fetch(`${apiUrl}/enquiries`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                firstName: form.name.split(/\s+/)[0] || form.name,
-                lastName: form.name.split(/\s+/).slice(1).join(" "),
-                email: form.email,
-                phone: "Not provided",
-                message: `${form.subject}: ${form.message}`,
-                source: "contact",
-                consent: true,
-            }),
-        });
-        if (!response.ok) {
-            const data = await response.json();
-            setError(data.error || "Unable to send your message.");
-            return;
+        setLoading(true);
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+            const response = await fetch(`${apiUrl}/enquiries`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    firstName: form.name.split(/\s+/)[0] || form.name,
+                    lastName: form.name.split(/\s+/).slice(1).join(" "),
+                    email: form.email,
+                    phone: "Not provided",
+                    message: `${form.subject}: ${form.message}`,
+                    source: "contact",
+                    consent: true,
+                }),
+            });
+            if (!response.ok) {
+                const data = await response.json();
+                setError(data.error || "Unable to send your message.");
+                return;
+            }
+            setSuccess(true);
+            setForm({
+                name: "",
+                email: "",
+                subject: "College Admission",
+                message: "",
+            });
+        } catch {
+            setError("Unable to send your message. Please try again.");
+        } finally {
+            setLoading(false);
         }
-        setSuccess(true);
-        setForm({
-            name: "",
-            email: "",
-            subject: "College Admission",
-            message: "",
-        });
     }
 
     return (
@@ -291,13 +300,15 @@ export default function ContactPage() {
                             </div>
                         )}
 
-                        <button
+                        <LoadingButton
                             type="submit"
+                            loading={loading}
+                            loadingText="Sending message..."
                             className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 py-4 font-semibold text-white shadow-lg shadow-blue-900/15 transition hover:bg-black focus:outline-none focus:ring-4 focus:ring-blue-200"
                         >
                             Submit Message
                             <Send size={18} />
-                        </button>
+                        </LoadingButton>
                     </form>
                 </div>
             </section>
