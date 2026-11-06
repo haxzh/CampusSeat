@@ -3,14 +3,14 @@ import AboutUsClient from "./AboutUsClient";
 export const metadata = {
     title: "About Us | CampusSeat",
     description:
-        "Meet the people, founders and global faculty building CampusSeat, a global education ecosystem connecting learning with real-world outcomes.",
+        "Meet the founders behind CampusSeat and OneX Academy, and learn how we help students explore programmes, compare universities, and plan their next step.",
     alternates: {
         canonical: "/about-us",
     },
     openGraph: {
         title: "About Us | CampusSeat",
         description:
-            "Meet the people and global faculty shaping the CampusSeat education ecosystem.",
+            "Discover the people and learning approach behind CampusSeat and OneX Academy.",
         url: "/about-us",
         type: "website",
     },

@@ -1,7 +1,4 @@
 
-
-
-
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -267,10 +264,10 @@ function PathwayCard({ pathway, index }) {
             className="sticky mb-6 scroll-mt-24 lg:mb-10"
             style={{ top: `calc(5.5rem + ${index * 0.65}rem)` }}
         >
-            <motion.article className={`group/pathway relative grid min-h-0 overflow-hidden rounded-[30px] border border-black/10 bg-white text-[#171717] shadow-[0_20px_65px_rgba(0,0,0,0.14)] ${reduceMotion ? "" : "transition-shadow duration-500 hover:shadow-[0_28px_80px_rgba(0,0,0,0.2)]"} lg:min-h-[510px] lg:grid-cols-[1.08fr_0.92fr]`}>
+            <motion.article className={`group/pathway relative grid min-h-0 overflow-hidden rounded-[30px] border border-black/10 bg-white text-[#171717] shadow-[0_20px_65px_rgba(0,0,0,0.14)] ${reduceMotion ? "" : "transition-shadow duration-500 hover:shadow-[0_28px_80px_rgba(0,0,0,0.2)]"} lg:min-h-[460px] lg:grid-cols-[1.08fr_0.92fr]`}>
                 <div className="pointer-events-none absolute inset-x-8 top-0 z-30 h-px bg-[#d6b46c] opacity-0 transition-opacity duration-300 group-hover/pathway:opacity-100" />
 
-                <div className="relative order-first aspect-[16/10] min-w-0 overflow-hidden bg-[#171717] lg:order-last lg:aspect-auto lg:min-h-[510px]">
+                <div className="relative order-first aspect-[16/10] min-w-0 overflow-hidden bg-[#171717] lg:order-last lg:aspect-auto lg:min-h-[460px]">
                     <motion.div
                         className="absolute inset-x-0 -top-5 -bottom-5"
                         style={{ y: reduceMotion ? 0 : imageY }}
@@ -321,7 +318,7 @@ function PathwayCard({ pathway, index }) {
                     </div>
                 </div>
 
-                <div className="order-last flex min-w-0 flex-col justify-between gap-6 p-5 sm:p-8 lg:order-first lg:p-10 xl:p-12">
+                <div className="order-last flex min-w-0 flex-col justify-between gap-6 p-5 sm:p-8 lg:order-first lg:gap-4 lg:p-8 xl:p-10">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <Chip>Pathway {String(index + 1).padStart(2, "0")}</Chip>
                         <span className="rounded-full bg-[#d6b46c]/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#76591f]">
@@ -1589,21 +1586,16 @@ export default function HomePage() {
                     >
                         <SectionHeading
                             eyebrow="Choose your university"
-                            title="One Application. Six Universities."
+                            title="One Application. More Universities."
                             accent="Your Choice."
                         />
                         <div>
                             <p className="text-sm leading-7 text-black/60 sm:text-base sm:leading-8">
-                                Every Doctorate, Master&apos;s, and Bachelor&apos;s degree at
-                                CampusSeat is delivered in partnership with a network of six
-                                respected universities. Rather than being assigned a university,
-                                you choose the one that fits your goals, your budget, and the
-                                recognition you&apos;re looking for with the same admissions and
-                                career support behind you no matter which partner you select.
+                                At CampusSeat, your future begins with the freedom to choose. Explore a diverse network of trusted university partners, compare academic programmes, and find the right fit for your ambitions, budget, and career goals. From your first application to your next big opportunity, we're here to guide you every step of the way.
                             </p>
                             <div className="mt-6">
                                 <PillLink href="/contact" variant="dark">
-                                    Compare University Partners
+                                    Discover Your University
                                 </PillLink>
                             </div>
                         </div>
@@ -1838,9 +1830,20 @@ export default function HomePage() {
                                 University Partners
                             </h2>
                             <ul className="mt-5 space-y-3">
-                                {universityPartners.map((partner) => (
-                                    <li key={partner.name} className="text-sm text-white/55">
-                                        {partner.name}
+                                {[
+                                    ["EIMT", "/University"],
+                                    ["LSMT", "/University"],
+                                    ["VocaTech", "/University"],
+                                    ["Braincruise", "/University"],
+                                    ["KSDA", "/University"],
+                                ].map(([label, href]) => (
+                                    <li key={label}>
+                                        <Link
+                                            href={href}
+                                            className={`text-sm text-white/55 transition hover:text-white ${linkStyle}`}
+                                        >
+                                            {label}
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>
